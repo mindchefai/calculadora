@@ -6,6 +6,13 @@ export default {
   ],
   theme: {
     extend: {
+      colors: {
+        mindchef: {
+          primary: '#203c42',
+          gold: '#e5b45f',
+          secondary: '#2c413d',
+        }
+      },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
