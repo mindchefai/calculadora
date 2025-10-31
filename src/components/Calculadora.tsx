@@ -69,7 +69,7 @@ const Calculadora: React.FC<CalculadoraProps> = ({ onLogout }) => {
                     rel="noopener noreferrer"
                     className="text-3xl md:text-4xl font-bold text-white hover:text-[#e5b45f] transition-colors"
                   >
-                    MindChef <span className="text-[#e5b45f]">AI</span>
+                    MindChef <span className="text-[#e5b45f]"></span>
                   </a>
                 </div>
                 <p className="text-gray-300 text-sm">
@@ -127,7 +127,7 @@ const Calculadora: React.FC<CalculadoraProps> = ({ onLogout }) => {
         {/* Footer */}
         <div className="py-6 text-center">
           <p className="text-sm text-gray-400">
-            Desarrollado por <span className="font-medium text-[#e5b45f]">MindChef AI</span>
+            Desarrollado por <span className="font-medium text-[#e5b45f]">MindChef</span>
           </p>
         </div>
       </div>
