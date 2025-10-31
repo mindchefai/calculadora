@@ -1,6 +1,4 @@
-// src/components/SousVideModal.tsx
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   X, 
   Thermometer, 
@@ -13,7 +11,8 @@ import {
   Apple, 
   Egg, 
   Wheat,
-  ChevronLeft
+  ChevronLeft,
+  Loader2
 } from 'lucide-react';
 
 interface SousVideModalProps {
@@ -32,75 +31,68 @@ interface SousVideItem {
   observaciones: string | null;
 }
 
-// Datos de ejemplo - reemplaza con tu JSON real
-const SOUS_VIDE_DATA: SousVideItem[] = [
-  {
-    id: 1,
-    categoria: "aves",
-    producto: "Pechuga de pollo",
-    medida: "150-200g",
-    temperatura_coccion: 65,
-    temperatura_corazon: 63,
-    tiempo_coccion: "1-2 horas",
-    observaciones: "Jugosa y tierna"
-  },
-  {
-    id: 2,
-    categoria: "pescados",
-    producto: "Salmón",
-    medida: "180g",
-    temperatura_coccion: 50,
-    temperatura_corazon: 48,
-    tiempo_coccion: "30-45 min",
-    observaciones: "Textura mantecosa"
-  },
-  {
-    id: 3,
-    categoria: "verduras",
-    producto: "Espárragos",
-    medida: null,
-    temperatura_coccion: 85,
-    temperatura_corazon: null,
-    tiempo_coccion: "15-20 min",
-    observaciones: "Crujientes al dente"
-  }
-];
-
-const fallbackIcon = (label: string) => (
-  <div className="w-5 h-5 rounded-full bg-cyan-100 text-[10px] font-bold text-cyan-800 flex items-center justify-center uppercase">
-    {label.slice(0, 2)}
-  </div>
-);
-
 const categoryIcons: Record<string, JSX.Element> = {
-  bovino: fallbackIcon("BO"),
-  ternera: fallbackIcon("TE"),
-  cerdo: fallbackIcon("CE"),
-  ovino: fallbackIcon("OV"),
-  cordero: fallbackIcon("CO"),
-  aves: <Feather className="w-5 h-5 text-cyan-600" />,
-  pescados: <Fish className="w-5 h-5 text-cyan-600" />,
-  cefalopodos: <Shell className="w-5 h-5 text-cyan-600" />,
-  moluscos: <Shell className="w-5 h-5 text-cyan-600" />,
-  verduras: <Salad className="w-5 h-5 text-cyan-600" />,
-  fruta: <Apple className="w-5 h-5 text-cyan-600" />,
-  huevos: <Egg className="w-5 h-5 text-cyan-600" />,
-  'legumbres y cereales': <Wheat className="w-5 h-5 text-cyan-600" />
+  bovino: <Heart className="w-5 h-5 text-red-600" />,
+  ternera: <Heart className="w-5 h-5 text-pink-600" />,
+  cerdo: <Heart className="w-5 h-5 text-rose-600" />,
+  ovino: <Heart className="w-5 h-5 text-orange-600" />,
+  cordero: <Heart className="w-5 h-5 text-amber-600" />,
+  aves: <Feather className="w-5 h-5 text-yellow-600" />,
+  pescados: <Fish className="w-5 h-5 text-blue-600" />,
+  cefalopodos: <Shell className="w-5 h-5 text-purple-600" />,
+  moluscos: <Shell className="w-5 h-5 text-indigo-600" />,
+  crustaceos: <Shell className="w-5 h-5 text-cyan-600" />,
+  verduras: <Salad className="w-5 h-5 text-green-600" />,
+  fruta: <Apple className="w-5 h-5 text-lime-600" />,
+  huevos: <Egg className="w-5 h-5 text-yellow-500" />,
+  'legumbres y cereales': <Wheat className="w-5 h-5 text-amber-700" />,
+  legumbres: <Wheat className="w-5 h-5 text-amber-700" />,
+  cereales: <Wheat className="w-5 h-5 text-yellow-700" />
 };
 
 const SousVideModal: React.FC<SousVideModalProps> = ({ isOpen, onClose }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedProductName, setSelectedProductName] = useState<string | null>(null);
+  const [sousVideData, setSousVideData] = useState<SousVideItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Cargar datos del JSON
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/sous_vide.json');
+        
+        if (!response.ok) {
+          throw new Error('No se pudo cargar el archivo sous_vide.json');
+        }
+        
+        const jsonData = await response.json();
+        setSousVideData(jsonData.sousvide_cooking_data || []);
+        setError(null);
+      } catch (err) {
+        console.error('Error cargando datos sous vide:', err);
+        setError('Error al cargar los datos. Por favor, recarga la página.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (isOpen) {
+      loadData();
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const categorias = Array.from(new Set(SOUS_VIDE_DATA.map(item => item.categoria)));
+  const categorias = Array.from(new Set(sousVideData.map(item => item.categoria)));
 
   const productosAgrupadosPorNombre = (cat: string) =>
-    Array.from(new Set(SOUS_VIDE_DATA.filter(i => i.categoria === cat).map(p => p.producto)));
+    Array.from(new Set(sousVideData.filter(i => i.categoria === cat).map(p => p.producto)));
 
   const variantesPorNombre = (producto: string) =>
-    SOUS_VIDE_DATA.filter(i => i.producto === producto && i.categoria === selectedCategory);
+    sousVideData.filter(i => i.producto === producto && i.categoria === selectedCategory);
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -133,8 +125,23 @@ const SousVideModal: React.FC<SousVideModalProps> = ({ isOpen, onClose }) => {
         {/* Content */}
         <div className="p-6 space-y-6">
           
+          {/* Estado de carga */}
+          {isLoading && (
+            <div className="flex flex-col items-center justify-center py-12 space-y-4">
+              <Loader2 className="w-12 h-12 text-cyan-600 animate-spin" />
+              <p className="text-gray-600">Cargando datos...</p>
+            </div>
+          )}
+
+          {/* Estado de error */}
+          {error && !isLoading && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+              <p className="text-red-800 font-medium">{error}</p>
+            </div>
+          )}
+
           {/* Vista de categorías */}
-          {!selectedCategory && (
+          {!isLoading && !error && !selectedCategory && (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {categorias.map((cat, idx) => {
                 const formatted = cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase();
@@ -153,7 +160,7 @@ const SousVideModal: React.FC<SousVideModalProps> = ({ isOpen, onClose }) => {
           )}
 
           {/* Vista de productos */}
-          {selectedCategory && !selectedProductName && (
+          {!isLoading && !error && selectedCategory && !selectedProductName && (
             <>
               <button 
                 onClick={() => setSelectedCategory(null)} 
@@ -177,7 +184,7 @@ const SousVideModal: React.FC<SousVideModalProps> = ({ isOpen, onClose }) => {
           )}
 
           {/* Vista de detalles del producto */}
-          {selectedProductName && (
+          {!isLoading && !error && selectedProductName && (
             <>
               <button
                 onClick={() => setSelectedProductName(null)}

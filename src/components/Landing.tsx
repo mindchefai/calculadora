@@ -202,66 +202,80 @@ const isCurrentAnswerValid = () => {
     }
   };
 
-  // Enviar formulario
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
 
-    try {
-      const nombre = answers[10] as string;
-      const email = answers[11] as string;
-      setUserEmail(email);
+// Enviar formulario
+const handleSubmit = async () => {
+  setIsSubmitting(true);
 
-      // Guardar en Airtable
-      const apiKey = import.meta.env.VITE_AIRTABLE_API_KEY;
-      const baseId = import.meta.env.VITE_AIRTABLE_BASE_ID;
-      const tableName = import.meta.env.VITE_AIRTABLE_TABLE_NAME || 'Quiz_Leads';
+  try {
+    const nombre = answers[10] as string;
+    const email = answers[11] as string;
+    setUserEmail(email);
 
-      const formattedAnswers: Record<string, string> = {};
-      QUESTIONS.forEach(q => {
-        const answer = answers[q.id];
-        const key = `Q${q.id}_${q.question.substring(0, 30)}`;
-        formattedAnswers[key] = Array.isArray(answer) ? answer.join(', ') : answer || '';
+    // Guardar en Airtable
+    const apiKey = import.meta.env.VITE_AIRTABLE_API_KEY;
+    const baseId = import.meta.env.VITE_AIRTABLE_BASE_ID;
+    const tableName = import.meta.env.VITE_AIRTABLE_TABLE_NAME || 'Leads';
+
+    // 👇 NUEVO: Mapeo manual de respuestas a campos de Airtable
+    const airtableData = {
+      'Nombre completo': answers[10] as string, // Pregunta 10
+      'Email': answers[11] as string, // Pregunta 11
+      'Rol': answers[1] as string, // Pregunta 1
+      'Aspectos gestion': Array.isArray(answers[2]) ? answers[2].join(', ') : '', // Pregunta 2
+      'Time consuming': Array.isArray(answers[3]) ? answers[3].join(', ') : '', // Pregunta 3
+      'Horas semanales': answers[4] as string, // Pregunta 4
+      'Frecuencia revision': answers[5] as string, // Pregunta 5
+      'Margen controlado': answers[6] as string, // Pregunta 6
+      'Ubicacion recetas': Array.isArray(answers[7]) ? answers[7].join(', ') : '', // Pregunta 7
+      'Tareas complicadas': Array.isArray(answers[8]) ? answers[8].join(', ') : '', // Pregunta 8
+      'Ticket medio': answers[9] as string, // Pregunta 9
+    };
+
+    if (apiKey && baseId && tableName) {
+      const response = await fetch(`https://api.airtable.com/v0/${baseId}/${tableName}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fields: airtableData
+        })
       });
 
-      if (apiKey && baseId && tableName) {
-        await fetch(`https://api.airtable.com/v0/${baseId}/${tableName}`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${apiKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            fields: {
-              Nombre: nombre,
-              Email: email,
-              ...formattedAnswers
-            }
-          })
-        });
+      // 👇 NUEVO: Verificar si hubo error
+// 👇 NUEVO: Verificar si hubo error
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error completo de Airtable:', JSON.stringify(errorData, null, 2));
+        console.error('Datos enviados:', JSON.stringify(airtableData, null, 2));
+        throw new Error(`Error al guardar en Airtable: ${errorData.error?.message || 'Error desconocido'}`);
       }
-
-      // Enviar email con código
-      const emailSent = await sendAccessCodeEmail(nombre, email);
-      
-      if (!emailSent) {
-        console.warn('No se pudo enviar el email, pero el usuario puede continuar');
-      }
-
-      setTimeout(() => {
-        setIsSubmitting(false);
-        setViewMode('complete');
-        setShowConfetti(true);
-        setTimeout(() => {
-          setShowAccessModal(true);
-        }, 1500);
-      }, 1500);
-
-    } catch (error) {
-      console.error('Error:', error);
-      setIsSubmitting(false);
-      alert('Hubo un error al procesar tu solicitud. Por favor intenta de nuevo.');
     }
-  };
+
+    // Enviar email con código
+    const emailSent = await sendAccessCodeEmail(nombre, email);
+    
+    if (!emailSent) {
+      console.warn('No se pudo enviar el email, pero el usuario puede continuar');
+    }
+
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setViewMode('complete');
+      setShowConfetti(true);
+      setTimeout(() => {
+        setShowAccessModal(true);
+      }, 1500);
+    }, 1500);
+
+  } catch (error) {
+    console.error('Error:', error);
+    setIsSubmitting(false);
+    alert('Hubo un error al procesar tu solicitud. Por favor intenta de nuevo.');
+  }
+};
 
   const handleLogout = () => {
     localStorage.removeItem('mindchefAccess');

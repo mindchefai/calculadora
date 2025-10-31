@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { Cuboid, Wind, Cloud, Grid, Flame, Thermometer, X } from 'lucide-react';
 import SousVideModal from './SousVideModal';
+import GelificantesModal from './GelificantesModal';
+
 
 interface CalculadoraProps {
   onLogout?: () => void;
@@ -137,34 +139,40 @@ const Calculadora: React.FC<CalculadoraProps> = ({ onLogout }) => {
         <SousVideModal isOpen onClose={handleCloseTechnique} />
       )}
 
+{selectedTechnique === 'Gelificar' && (
+  <GelificantesModal isOpen onClose={handleCloseTechnique} />
+)}
+
       {/* Placeholder para otras técnicas */}
-      {selectedTechnique && selectedTechnique !== 'Cocinar a baja temperatura' && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative">
-            <button
-              onClick={handleCloseTechnique}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
-            >
-              <X className="w-5 h-5 text-gray-600" />
-            </button>
-            
-            <div className="text-center space-y-4">
-              <h2 className="text-2xl font-bold text-[#203c42]">
-                {selectedTechnique}
-              </h2>
-              <p className="text-gray-600">
-                Esta técnica estará disponible próximamente.
-              </p>
-              <button
-                onClick={handleCloseTechnique}
-                className="mt-4 px-6 py-3 bg-gradient-to-r from-[#e5b45f] to-[#d4a04a] text-white font-semibold rounded-xl hover:shadow-lg transition-all"
-              >
-                Volver al menú
-              </button>
-            </div>
-          </div>
+{selectedTechnique && 
+  selectedTechnique !== 'Cocinar a baja temperatura' && 
+  selectedTechnique !== 'Gelificar' && (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative">
+        <button
+          onClick={handleCloseTechnique}
+          className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
+        >
+          <X className="w-5 h-5 text-gray-600" />
+        </button>
+
+        <div className="text-center space-y-4">
+          <h2 className="text-2xl font-bold text-[#203c42]">
+            {selectedTechnique}
+          </h2>
+          <p className="text-gray-600">
+            Esta técnica estará disponible próximamente.
+          </p>
+          <button
+            onClick={handleCloseTechnique}
+            className="mt-4 px-6 py-3 bg-gradient-to-r from-[#e5b45f] to-[#d4a04a] text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+          >
+            Volver al menú
+          </button>
         </div>
-      )}
+      </div>
+    </div>
+)}
     </div>
   );
 };
