@@ -9,6 +9,7 @@ import NixtamalizarModal from './NixtamalizarModal';
 import EsferificarModal from './EsferificarModal';
 import DeshidratarModal from './DeshidratarModal';
 import EncurtirModal from './EncurtirModal';
+import EscabecharModal from './EscabecharModal';
 
 interface CalculadoraProps {
   onLogout?: () => void;
@@ -177,6 +178,9 @@ const Calculadora: React.FC<CalculadoraProps> = ({ onLogout }) => {
             {selectedTechnique === 'Encurtir' && (
         <EncurtirModal isOpen onClose={handleCloseTechnique} />
       )}
+                  {selectedTechnique === 'Escabechar' && (
+        <EscabecharModal isOpen onClose={handleCloseTechnique} />
+      )}
 
       {/* Placeholder para otras técnicas */}
       {selectedTechnique && 
@@ -188,7 +192,8 @@ const Calculadora: React.FC<CalculadoraProps> = ({ onLogout }) => {
        selectedTechnique !== 'Nixtamalizar' &&
        selectedTechnique !== 'Esferificar' &&
        selectedTechnique !== 'Deshidratar' && 
-       selectedTechnique !== 'Encurtir' && (
+       selectedTechnique !== 'Encurtir' &&
+      selectedTechnique !== 'Escabechar' && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative">
             <button

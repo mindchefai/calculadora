@@ -3,11 +3,12 @@ import {
   X, 
   ChevronLeft,
   Clock,
-  Droplets,
   Lightbulb,
   AlertTriangle,
-  Leaf,
-  Package
+  PillBottle,
+  Package,
+  Calculator,
+  AlertCircle
 } from 'lucide-react';
 import { encurtidos } from '../data/encurtir';
 
@@ -17,26 +18,90 @@ interface EncurtirModalProps {
 }
 
 const categoryIcons: Record<string, JSX.Element> = {
-  'Encurtidos Rápidos': <Clock className="w-5 h-5 text-green-600" />,
-  'Fermentados (Lacto-fermentación)': <Droplets className="w-5 h-5 text-purple-600" />,
-  'Encurtidos en Conserva': <Package className="w-5 h-5 text-amber-600" />,
-  'Encurtidos Exóticos': <Leaf className="w-5 h-5 text-pink-600" />
+  'Encurtidos Rápidos': <PillBottle className="w-5 h-5 text-green-600" />,
+  'Fermentados (Lacto-fermentación)': <PillBottle className="w-5 h-5 text-green-600" />,
+  'Encurtidos en Conserva': <PillBottle className="w-5 h-5 text-green-600" />,
+  'Encurtidos Exóticos': <PillBottle className="w-5 h-5 text-green-600" />
 };
 
 const EncurtirModal: React.FC<EncurtirModalProps> = ({ isOpen, onClose }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<string | null>(null);
+  const [totalVolume, setTotalVolume] = useState<string>('');
 
   if (!isOpen) return null;
 
   const resetAll = () => {
     setSelectedCategory(null);
     setSelectedRecipe(null);
+    setTotalVolume('');
   };
 
   const resetToCategory = () => {
     setSelectedRecipe(null);
+    setTotalVolume('');
   };
+
+  const calculateIngredients = () => {
+    if (!selectedCategory || !selectedRecipe || !totalVolume) return null;
+
+    const recipe = encurtidos[selectedCategory].recipes.find(r => r.name === selectedRecipe);
+    if (!recipe) return null;
+
+    const volume = parseFloat(totalVolume);
+    if (isNaN(volume) || volume <= 0) return null;
+
+    // Extraer sal en g/L
+    const saltMatch = recipe.salt.match(/(\d+)g?\s*por litro/);
+    const saltPerLiter = saltMatch ? parseInt(saltMatch[1]) : 0;
+    const saltAmount = (volume * saltPerLiter) / 1000;
+
+    // Extraer azúcar si existe
+    let sugarAmount = null;
+    if (recipe.sugar) {
+      const sugarMatch = recipe.sugar.match(/(\d+)g?\s*por litro/);
+      if (sugarMatch) {
+        const sugarPerLiter = parseInt(sugarMatch[1]);
+        sugarAmount = (volume * sugarPerLiter) / 1000;
+      }
+    }
+
+    // Calcular vinagre y agua según el tipo de salmuera
+    let vinegar = null;
+    let water = null;
+
+    if (recipe.vinegar) {
+      // Tiene vinagre - buscar proporción
+      const brineType = recipe.brineType.toLowerCase();
+      
+      if (brineType.includes('50/50')) {
+        vinegar = volume * 0.5;
+        water = volume * 0.5;
+      } else if (brineType.includes('60/40')) {
+        vinegar = volume * 0.6;
+        water = volume * 0.4;
+      } else if (brineType.includes('70/30')) {
+        vinegar = volume * 0.7;
+        water = volume * 0.3;
+      } else {
+        // Por defecto 50/50 si no se especifica
+        vinegar = volume * 0.5;
+        water = volume * 0.5;
+      }
+    } else {
+      // Solo agua (fermentados)
+      water = volume;
+    }
+
+    return {
+      salt: saltAmount.toFixed(1),
+      sugar: sugarAmount ? sugarAmount.toFixed(1) : null,
+      vinegar: vinegar ? vinegar.toFixed(0) : null,
+      water: water ? water.toFixed(0) : null
+    };
+  };
+
+  const calculations = calculateIngredients();
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -138,7 +203,7 @@ const EncurtirModal: React.FC<EncurtirModalProps> = ({ isOpen, onClose }) => {
             </>
           )}
 
-          {/* Detalle de la receta */}
+          {/* Detalle de la receta con calculadora */}
           {selectedCategory && selectedRecipe && (
             <>
               <button onClick={resetToCategory} className="flex items-center gap-1 text-sm text-green-700 hover:text-green-900 transition-colors">
@@ -244,48 +309,128 @@ const EncurtirModal: React.FC<EncurtirModalProps> = ({ isOpen, onClose }) => {
                           <p className="text-sm font-semibold text-gray-800">{recipe.storage}</p>
                         </div>
                       </div>
+                    </div>
 
-                      {/* Preparación paso a paso */}
-                      <div>
-                        <p className="text-sm font-medium text-gray-600 mb-3">Preparación:</p>
-                        <ol className="space-y-2">
-                          {recipe.preparation.map((step, idx) => (
-                            <li key={idx} className="flex gap-3">
-                              <span className="flex-shrink-0 w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                                {idx + 1}
-                              </span>
-                              <span className="text-sm text-gray-700 pt-0.5">{step}</span>
-                            </li>
-                          ))}
-                        </ol>
+                    {/* CALCULADORA */}
+                    <div className="bg-white border-2 border-green-300 rounded-lg p-6">
+                      <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <Calculator className="text-green-600" size={20} />
+                        Calculadora de salmuera
+                      </h3>
+
+                      <div className="mb-6">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Volumen total de salmuera (ml)
+                        </label>
+                        <input
+                          type="number"
+                          value={totalVolume}
+                          onChange={(e) => setTotalVolume(e.target.value)}
+                          placeholder="1000"
+                          className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Introduce el volumen total de salmuera que necesitas
+                        </p>
                       </div>
 
-                      {/* Consejos específicos */}
-                      {recipe.tips.length > 0 && (
-                        <div>
-                          <p className="text-sm font-medium text-gray-600 mb-2">Consejos:</p>
-                          <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-                            {recipe.tips.map((tip, idx) => (
-                              <li key={idx}>{tip}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
+                      {calculations && (
+                        <div className="space-y-4">
+                          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-lg p-5">
+                            <div className="flex items-center gap-2 mb-3">
+                              <AlertCircle className="text-green-600" size={20} />
+                              <span className="font-semibold text-green-900">Ingredientes necesarios</span>
+                            </div>
+                            
+                            <div className="space-y-3">
+                              {calculations.vinegar && (
+                                <div className="bg-white p-3 rounded-lg">
+                                  <div className="flex justify-between items-center">
+                                    <span className="text-sm text-gray-700">Vinagre ({recipe.vinegar})</span>
+                                    <span className="text-xl font-bold text-green-700">{calculations.vinegar}ml</span>
+                                  </div>
+                                </div>
+                              )}
 
-                      {/* Usos */}
-                      {recipe.uses.length > 0 && (
-                        <div>
-                          <p className="text-sm font-medium text-gray-600 mb-2">Usos y aplicaciones:</p>
-                          <div className="flex flex-wrap gap-2">
-                            {recipe.uses.map((use, idx) => (
-                              <span key={idx} className="inline-block bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded-full">
-                                {use}
-                              </span>
-                            ))}
+                              {calculations.water && (
+                                <div className="bg-white p-3 rounded-lg">
+                                  <div className="flex justify-between items-center">
+                                    <span className="text-sm text-gray-700">Agua</span>
+                                    <span className="text-xl font-bold text-green-700">{calculations.water}ml</span>
+                                  </div>
+                                </div>
+                              )}
+
+                              <div className="bg-white p-3 rounded-lg">
+                                <div className="flex justify-between items-center">
+                                  <span className="text-sm text-gray-700">Sal</span>
+                                  <span className="text-xl font-bold text-green-700">{calculations.salt}g</span>
+                                </div>
+                              </div>
+
+                              {calculations.sugar && (
+                                <div className="bg-white p-3 rounded-lg">
+                                  <div className="flex justify-between items-center">
+                                    <span className="text-sm text-gray-700">Azúcar</span>
+                                    <span className="text-xl font-bold text-green-700">{calculations.sugar}g</span>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="mt-4 pt-3 border-t border-green-200 text-xs text-green-700">
+                              Para <strong>{totalVolume}ml</strong> de salmuera total
+                            </div>
                           </div>
                         </div>
                       )}
                     </div>
+
+                    {/* Preparación paso a paso */}
+                    <div className="bg-white border border-gray-200 rounded-lg p-6">
+                      <h4 className="font-semibold text-gray-700 mb-4">Preparación paso a paso</h4>
+                      <ol className="space-y-3">
+                        {recipe.preparation.map((step, idx) => (
+                          <li key={idx} className="flex gap-3">
+                            <span className="flex-shrink-0 w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-xs font-bold">
+                              {idx + 1}
+                            </span>
+                            <span className="text-sm text-gray-700 pt-0.5">{step}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+
+                    {/* Consejos específicos */}
+                    {recipe.tips.length > 0 && (
+                      <div className="bg-amber-50 border border-amber-200 rounded-lg p-5">
+                        <div className="flex items-start gap-2">
+                          <Lightbulb className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-semibold text-amber-900 mb-2">Consejos útiles</h4>
+                            <ul className="list-disc list-inside text-sm text-amber-800 space-y-1">
+                              {recipe.tips.map((tip, idx) => (
+                                <li key={idx}>{tip}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Usos */}
+                    {recipe.uses.length > 0 && (
+                      <div className="bg-white border border-gray-200 rounded-lg p-5">
+                        <h4 className="font-semibold text-gray-700 mb-3">Usos y aplicaciones</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {recipe.uses.map((use, idx) => (
+                            <span key={idx} className="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1.5 rounded-full">
+                              {use}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })()}
