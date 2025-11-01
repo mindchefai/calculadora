@@ -1,35 +1,35 @@
 import { useState } from 'react';
 import { 
   X, 
-  Cuboid, 
+  Wind, 
   ChevronLeft,
   Calculator,
   AlertCircle
 } from 'lucide-react';
-import { gelificantes } from '../data/gelificantes';
+import { aerators, AeratorDosage } from '../data/aerators';
 
-interface GelificantesModalProps {
+interface AirearModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }) => {
-  const [selectedIngredient, setSelectedIngredient] = useState<string | null>(null);
-  const [selectedTexture, setSelectedTexture] = useState<string | null>(null);
+const AirearModal: React.FC<AirearModalProps> = ({ isOpen, onClose }) => {
+  const [selectedAerator, setSelectedAerator] = useState<string | null>(null);
+  const [selectedContext, setSelectedContext] = useState<string | null>(null);
   const [liquidAmount, setLiquidAmount] = useState<string>('');
   const [customDosageValue, setCustomDosageValue] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
   const resetAll = () => {
-    setSelectedIngredient(null);
-    setSelectedTexture(null);
+    setSelectedAerator(null);
+    setSelectedContext(null);
     setLiquidAmount('');
     setCustomDosageValue(null);
   };
 
   const resetToIngredient = () => {
-    setSelectedTexture(null);
+    setSelectedContext(null);
     setLiquidAmount('');
     setCustomDosageValue(null);
   };
@@ -48,10 +48,13 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
   };
 
   const calculateDosage = () => {
-    if (!selectedIngredient || !selectedTexture || !liquidAmount) return null;
+    if (!selectedAerator || !selectedContext || !liquidAmount) return null;
 
-    const ingredient = gelificantes[selectedIngredient];
-    const dosage = ingredient.dosages.find(d => d.texture.toLowerCase() === selectedTexture.toLowerCase());
+    const ingredient = aerators[selectedAerator];
+    const dosage = ingredient.dosages.find(
+      (d: AeratorDosage) => d.context.toLowerCase() === selectedContext.toLowerCase()
+    );
+
     if (!dosage) return null;
 
     const amount = parseFloat(liquidAmount);
@@ -59,10 +62,10 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
 
     if (isNaN(valueToUse) || isNaN(amount)) return null;
 
-    const calculated = (amount * valueToUse) / 1000;
+    const calculatedAmount = (amount * valueToUse) / 1000;
 
     return {
-      amount: calculated.toFixed(2),
+      amount: calculatedAmount.toFixed(2),
       unit: 'g',
       originalDosage: dosage.amount
     };
@@ -80,7 +83,7 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
             <div className="flex items-center gap-4">
               <button
                 onClick={onClose}
-                className="flex items-center gap-2 text-sm text-amber-700 hover:text-amber-900 transition-colors"
+                className="flex items-center gap-2 text-sm text-blue-700 hover:text-blue-900 transition-colors"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Menú principal
@@ -94,7 +97,7 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
             </button>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-[#203c42] mt-4 text-center">
-            Gelificar
+            Airear
           </h2>
         </div>
 
@@ -102,15 +105,15 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
         <div className="p-6 space-y-6">
           
           {/* Selección de ingrediente */}
-          {!selectedIngredient && (
+          {!selectedAerator && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {Object.keys(gelificantes).map((name) => (
+              {Object.keys(aerators).map((name) => (
                 <button
                   key={name}
-                  onClick={() => setSelectedIngredient(name)}
-                  className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg hover:bg-amber-100 hover:border-amber-300 text-sm font-medium text-amber-900 cursor-pointer transition-all"
+                  onClick={() => setSelectedAerator(name)}
+                  className="flex items-center gap-3 p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 hover:border-blue-300 text-sm font-medium text-blue-900 cursor-pointer transition-all"
                 >
-                  <Cuboid className="w-5 h-5 text-amber-600" />
+                  <Wind className="w-5 h-5 text-blue-600" />
                   {name}
                 </button>
               ))}
@@ -118,36 +121,25 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
           )}
 
           {/* Detalle del ingrediente */}
-          {selectedIngredient && !selectedTexture && (
+          {selectedAerator && !selectedContext && (
             <>
-              <button onClick={resetAll} className="flex items-center gap-1 text-sm text-amber-700 hover:text-amber-900 transition-colors">
+              <button onClick={resetAll} className="flex items-center gap-1 text-sm text-blue-700 hover:text-blue-900 transition-colors">
                 <ChevronLeft className="w-4 h-4" />
                 Volver a ingredientes
               </button>
 
-              <div className="bg-gradient-to-br from-amber-50 to-white p-6 rounded-lg border border-amber-200 space-y-6 shadow-sm">
-                <h3 className="text-lg font-bold text-gray-800">{selectedIngredient}</h3>
+              <div className="bg-gradient-to-br from-blue-50 to-white p-6 rounded-lg border border-blue-200 space-y-6 shadow-sm">
+                <h3 className="text-lg font-bold text-gray-800">{selectedAerator}</h3>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="font-semibold text-gray-700 mb-1">Origen</h4>
-                    <p className="text-sm text-gray-600">{gelificantes[selectedIngredient].origin}</p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-700 mb-1">pH</h4>
-                    <p className="text-sm text-gray-600">{gelificantes[selectedIngredient].ph}</p>
-                  </div>
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-1">Base</h4>
+                  <p className="text-sm text-gray-600">{aerators[selectedAerator].base}</p>
                 </div>
-
-                <p className="text-sm text-gray-600">
-                  <strong>Hidratación:</strong> {gelificantes[selectedIngredient].hydrationTemp} |{' '}
-                  <strong>Gelificación:</strong> {gelificantes[selectedIngredient].gelTemp}
-                </p>
 
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-2">Características</h4>
                   <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-                    {gelificantes[selectedIngredient].characteristics.map((char, idx) => (
+                    {aerators[selectedAerator].characteristics.map((char, idx) => (
                       <li key={idx}>{char}</li>
                     ))}
                   </ul>
@@ -156,8 +148,8 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-2">Aplicaciones</h4>
                   <div className="flex flex-wrap gap-2">
-                    {gelificantes[selectedIngredient].applications.map((app, idx) => (
-                      <span key={idx} className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-medium">
+                    {aerators[selectedAerator].applications.map((app, idx) => (
+                      <span key={idx} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">
                         {app}
                       </span>
                     ))}
@@ -167,29 +159,23 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-2">Dosificaciones</h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {gelificantes[selectedIngredient].dosages.map((d, idx) => (
+                    {aerators[selectedAerator].dosages.map((d, idx) => (
                       <button
                         key={idx}
-                        onClick={() => setSelectedTexture(d.texture)}
-                        className="text-left p-4 border-2 border-gray-200 rounded-lg hover:bg-amber-50 hover:border-amber-300 bg-white cursor-pointer transition-all"
+                        onClick={() => setSelectedContext(d.context)}
+                        className="text-left p-4 border-2 border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 bg-white cursor-pointer transition-all"
                       >
-                        <p className="text-sm font-semibold text-gray-800">{d.texture}</p>
-                        <p className="text-sm text-amber-700 font-medium">{d.amount}</p>
+                        <p className="text-sm font-semibold text-gray-800">{d.context}</p>
+                        <p className="text-sm text-blue-700 font-medium">{d.amount}</p>
                       </button>
                     ))}
                   </div>
-
-                  {gelificantes[selectedIngredient].maxDosage && (
-                    <div className="text-xs text-red-600 mt-3 bg-red-50 p-2 rounded">
-                      <strong>⚠️ Dosificación máxima:</strong> {gelificantes[selectedIngredient].maxDosage}
-                    </div>
-                  )}
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-2">Instrucciones</h4>
                   <ol className="list-decimal list-inside text-sm text-gray-700 space-y-2">
-                    {gelificantes[selectedIngredient].instructions.map((step, idx) => (
+                    {aerators[selectedAerator].instructions.map((step, idx) => (
                       <li key={idx}>{step}</li>
                     ))}
                   </ol>
@@ -199,16 +185,16 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
           )}
 
           {/* Calculadora de dosis */}
-          {selectedIngredient && selectedTexture && (
+          {selectedAerator && selectedContext && (
             <>
-              <button onClick={resetToIngredient} className="flex items-center gap-1 text-sm text-amber-700 hover:text-amber-900 transition-colors">
+              <button onClick={resetToIngredient} className="flex items-center gap-1 text-sm text-blue-700 hover:text-blue-900 transition-colors">
                 <ChevronLeft className="w-4 h-4" />
-                Volver a texturas de {selectedIngredient}
+                Volver a contextos de {selectedAerator}
               </button>
 
-              <div className="bg-white border-2 border-amber-200 rounded-lg p-6">
+              <div className="bg-white border-2 border-blue-200 rounded-lg p-6">
                 <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                  <Calculator className="text-amber-500" size={20} />
+                  <Calculator className="text-blue-500" size={20} />
                   Calculadora de dosis
                 </h3>
 
@@ -220,15 +206,15 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
                       value={liquidAmount}
                       onChange={(e) => setLiquidAmount(e.target.value)}
                       placeholder="1000"
-                      className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all"
+                      className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Textura seleccionada</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Contexto seleccionado</label>
                     <input
                       disabled
-                      value={selectedTexture}
+                      value={selectedContext}
                       className="w-full p-3 border-2 bg-gray-50 border-gray-300 rounded-lg text-sm text-gray-700"
                     />
                   </div>
@@ -236,7 +222,7 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
 
                 {/* Slider para rangos */}
                 {(() => {
-                  const dosage = gelificantes[selectedIngredient!].dosages.find(d => d.texture === selectedTexture);
+                  const dosage = aerators[selectedAerator!].dosages.find(d => d.context === selectedContext);
                   const range = dosage ? getDosageRange(dosage.amount) : null;
 
                   if (range && range[0] !== range[1]) {
@@ -244,7 +230,7 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
                     return (
                       <div className="mb-6">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Selecciona dosis en g/L: <strong className="text-amber-600">{customDosageValue ?? min}</strong>
+                          Selecciona dosis en g/L: <strong className="text-blue-600">{customDosageValue ?? min}</strong>
                         </label>
                         <input
                           type="range"
@@ -253,7 +239,7 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
                           step="0.1"
                           value={customDosageValue ?? min}
                           onChange={(e) => setCustomDosageValue(e.target.value)}
-                          className="w-full h-2 bg-amber-200 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                          className="w-full h-2 bg-blue-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
                         />
                         <div className="flex justify-between text-sm text-gray-600 mt-1">
                           <span>{min}g/L</span>
@@ -276,10 +262,10 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
                       {calculation.amount} {calculation.unit}
                     </div>
                     <div className="text-sm text-green-700">
-                      de <strong>{selectedIngredient}</strong>
+                      de <strong>{selectedAerator}</strong>
                     </div>
                     <div className="text-sm text-green-600 mt-2 pt-2 border-t border-green-200">
-                      Para {liquidAmount}ml con textura de <strong>{selectedTexture}</strong> ({calculation.originalDosage})
+                      Para {liquidAmount}ml en contexto de <strong>{selectedContext}</strong> ({calculation.originalDosage})
                     </div>
                   </div>
                 )}
@@ -292,4 +278,4 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
   );
 };
 
-export default GelificantesModal;
+export default AirearModal;

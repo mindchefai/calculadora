@@ -1,9 +1,14 @@
-// src/components/Calculadora.tsx
 import { useState, useEffect } from 'react';
-import { Cuboid, Wind, Cloud, Grid, Flame, Thermometer, X } from 'lucide-react';
+import { Cuboid, Wind, Cloud, Grid, Flame, Thermometer, Droplet, Sun, PillBottle, X, Snail } from 'lucide-react';
 import SousVideModal from './SousVideModal';
 import GelificantesModal from './GelificantesModal';
-
+import AirearModal from './AirearModal';
+import EspumarModal from './EspumarModal';
+import TexturizarModal from './TexturizantesModal';
+import NixtamalizarModal from './NixtamalizarModal';
+import EsferificarModal from './EsferificarModal';
+import DeshidratarModal from './DeshidratarModal';
+import EncurtirModal from './EncurtirModal';
 
 interface CalculadoraProps {
   onLogout?: () => void;
@@ -14,15 +19,18 @@ const techniques = [
   { name: 'Airear', icon: <Wind className="w-6 h-6 text-blue-500" /> },
   { name: 'Espumar', icon: <Cloud className="w-6 h-6 text-rose-500" /> },
   { name: 'Texturizar', icon: <Grid className="w-6 h-6 text-violet-500" /> },
+  { name: 'Esferificar', icon: <Droplet className="w-6 h-6 text-teal-500" /> },
   { name: 'Nixtamalizar', icon: <Flame className="w-6 h-6 text-lime-600" /> },
-  { name: 'Cocinar a baja temperatura', icon: <Thermometer className="w-6 h-6 text-cyan-600" /> }
+  { name: 'Deshidratar', icon: <Sun className="w-6 h-6 text-orange-500" /> },
+  { name: 'Cocinar a baja temperatura', icon: <Snail className="w-6 h-6 text-cyan-600" /> },
+    { name: 'Encurtir', icon: <PillBottle className="w-6 h-6 text-pink-600" /> },
+      { name: 'Escabechar', icon: <Thermometer className="w-6 h-6 text-yellow-700" /> }
 ];
 
 const Calculadora: React.FC<CalculadoraProps> = ({ onLogout }) => {
   const [selectedTechnique, setSelectedTechnique] = useState<string | null>(null);
 
   useEffect(() => {
-    // Reset technique when component mounts
     setSelectedTechnique(null);
   }, []);
 
@@ -71,7 +79,7 @@ const Calculadora: React.FC<CalculadoraProps> = ({ onLogout }) => {
                     rel="noopener noreferrer"
                     className="text-3xl md:text-4xl font-bold text-white hover:text-[#e5b45f] transition-colors"
                   >
-                    MindChef <span className="text-[#e5b45f]"></span>
+                    MindChef
                   </a>
                 </div>
                 <p className="text-gray-300 text-sm">
@@ -139,40 +147,74 @@ const Calculadora: React.FC<CalculadoraProps> = ({ onLogout }) => {
         <SousVideModal isOpen onClose={handleCloseTechnique} />
       )}
 
-{selectedTechnique === 'Gelificar' && (
-  <GelificantesModal isOpen onClose={handleCloseTechnique} />
-)}
+      {selectedTechnique === 'Gelificar' && (
+        <GelificantesModal isOpen onClose={handleCloseTechnique} />
+      )}
+
+      {selectedTechnique === 'Airear' && (
+        <AirearModal isOpen onClose={handleCloseTechnique} />
+      )}
+
+      {selectedTechnique === 'Espumar' && (
+        <EspumarModal isOpen onClose={handleCloseTechnique} />
+      )}
+
+      {selectedTechnique === 'Texturizar' && (
+        <TexturizarModal isOpen onClose={handleCloseTechnique} />
+      )}
+
+      {selectedTechnique === 'Nixtamalizar' && (
+        <NixtamalizarModal isOpen onClose={handleCloseTechnique} />
+      )}
+
+      {selectedTechnique === 'Esferificar' && (
+        <EsferificarModal isOpen onClose={handleCloseTechnique} />
+      )}
+
+      {selectedTechnique === 'Deshidratar' && (
+        <DeshidratarModal isOpen onClose={handleCloseTechnique} />
+      )}
+            {selectedTechnique === 'Encurtir' && (
+        <EncurtirModal isOpen onClose={handleCloseTechnique} />
+      )}
 
       {/* Placeholder para otras técnicas */}
-{selectedTechnique && 
-  selectedTechnique !== 'Cocinar a baja temperatura' && 
-  selectedTechnique !== 'Gelificar' && (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative">
-        <button
-          onClick={handleCloseTechnique}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
-        >
-          <X className="w-5 h-5 text-gray-600" />
-        </button>
-
-        <div className="text-center space-y-4">
-          <h2 className="text-2xl font-bold text-[#203c42]">
-            {selectedTechnique}
-          </h2>
-          <p className="text-gray-600">
-            Esta técnica estará disponible próximamente.
-          </p>
-          <button
-            onClick={handleCloseTechnique}
-            className="mt-4 px-6 py-3 bg-gradient-to-r from-[#e5b45f] to-[#d4a04a] text-white font-semibold rounded-xl hover:shadow-lg transition-all"
-          >
-            Volver al menú
-          </button>
+      {selectedTechnique && 
+       selectedTechnique !== 'Cocinar a baja temperatura' && 
+       selectedTechnique !== 'Gelificar' &&
+       selectedTechnique !== 'Airear' &&
+       selectedTechnique !== 'Espumar' && 
+       selectedTechnique !== 'Texturizar' &&
+       selectedTechnique !== 'Nixtamalizar' &&
+       selectedTechnique !== 'Esferificar' &&
+       selectedTechnique !== 'Deshidratar' && 
+       selectedTechnique !== 'Encurtir' && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 relative">
+            <button
+              onClick={handleCloseTechnique}
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              <X className="w-5 h-5 text-gray-600" />
+            </button>
+            
+            <div className="text-center space-y-4">
+              <h2 className="text-2xl font-bold text-[#203c42]">
+                {selectedTechnique}
+              </h2>
+              <p className="text-gray-600">
+                Esta técnica estará disponible próximamente.
+              </p>
+              <button
+                onClick={handleCloseTechnique}
+                className="mt-4 px-6 py-3 bg-gradient-to-r from-[#e5b45f] to-[#d4a04a] text-white font-semibold rounded-xl hover:shadow-lg transition-all"
+              >
+                Volver al menú
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-)}
+      )}
     </div>
   );
 };

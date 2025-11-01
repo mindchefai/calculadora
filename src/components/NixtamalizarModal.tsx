@@ -1,21 +1,21 @@
 import { useState } from 'react';
 import { 
   X, 
-  Cuboid, 
+  Flame, 
   ChevronLeft,
   Calculator,
   AlertCircle
 } from 'lucide-react';
-import { gelificantes } from '../data/gelificantes';
+import { nixtamalizadores } from '../data/nixtamalizar';
 
-interface GelificantesModalProps {
+interface NixtamalizarModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }) => {
+const NixtamalizarModal: React.FC<NixtamalizarModalProps> = ({ isOpen, onClose }) => {
   const [selectedIngredient, setSelectedIngredient] = useState<string | null>(null);
-  const [selectedTexture, setSelectedTexture] = useState<string | null>(null);
+  const [selectedContext, setSelectedContext] = useState<string | null>(null);
   const [liquidAmount, setLiquidAmount] = useState<string>('');
   const [customDosageValue, setCustomDosageValue] = useState<string | null>(null);
 
@@ -23,23 +23,22 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
 
   const resetAll = () => {
     setSelectedIngredient(null);
-    setSelectedTexture(null);
+    setSelectedContext(null);
     setLiquidAmount('');
     setCustomDosageValue(null);
   };
 
   const resetToIngredient = () => {
-    setSelectedTexture(null);
+    setSelectedContext(null);
     setLiquidAmount('');
     setCustomDosageValue(null);
   };
 
   const getDosageRange = (amount: string): [number, number] | null => {
-    const match = amount.match(/(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)/);
-    if (match) {
-      return [parseFloat(match[1]), parseFloat(match[2])];
-    }
-    const single = amount.match(/(\d+(?:\.\d+)?)/);
+    const clean = amount.replace(/[≈~]/g, '').trim();
+    const match = clean.match(/(\d+(?:\.\d+)?)\s*[-–to]+\s*(\d+(?:\.\d+)?)/);
+    if (match) return [parseFloat(match[1]), parseFloat(match[2])];
+    const single = clean.match(/(\d+(?:\.\d+)?)/);
     if (single) {
       const val = parseFloat(single[1]);
       return [val, val];
@@ -47,24 +46,45 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
     return null;
   };
 
-  const calculateDosage = () => {
-    if (!selectedIngredient || !selectedTexture || !liquidAmount) return null;
+  const getDosageUnit = (amount: string): 'percent' | 'g_per_l' | 'g_per_kg' => {
+    if (amount.includes('%')) return 'percent';
+    if (amount.includes('g/kg')) return 'g_per_kg';
+    return 'g_per_l';
+  };
 
-    const ingredient = gelificantes[selectedIngredient];
-    const dosage = ingredient.dosages.find(d => d.texture.toLowerCase() === selectedTexture.toLowerCase());
+  const calculateDosage = () => {
+    if (!selectedIngredient || !selectedContext || !liquidAmount) return null;
+
+    const ingredient = nixtamalizadores[selectedIngredient];
+    const dosage = ingredient.dosages.find(
+      (d) => d.context.toLowerCase() === selectedContext.toLowerCase()
+    );
+
     if (!dosage) return null;
 
+    const unitType = getDosageUnit(dosage.amount);
+    const baseValue = customDosageValue ?? dosage.amount.match(/(\d+(?:\.\d+)?)/)?.[1];
+    if (!baseValue) return null;
+
     const amount = parseFloat(liquidAmount);
-    const valueToUse = customDosageValue ? parseFloat(customDosageValue) : parseFloat(dosage.amount);
+    const dosageValue = parseFloat(baseValue);
 
-    if (isNaN(valueToUse) || isNaN(amount)) return null;
+    if (isNaN(amount) || isNaN(dosageValue)) return null;
 
-    const calculated = (amount * valueToUse) / 1000;
+    let calculated: number;
+    if (unitType === 'percent') {
+      calculated = (amount * dosageValue) / 100;
+    } else if (unitType === 'g_per_kg') {
+      calculated = (amount * dosageValue) / 1000;
+    } else {
+      calculated = (amount * dosageValue) / 1000;
+    }
 
     return {
       amount: calculated.toFixed(2),
       unit: 'g',
-      originalDosage: dosage.amount
+      originalDosage: dosage.amount,
+      unitType
     };
   };
 
@@ -80,7 +100,7 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
             <div className="flex items-center gap-4">
               <button
                 onClick={onClose}
-                className="flex items-center gap-2 text-sm text-amber-700 hover:text-amber-900 transition-colors"
+                className="flex items-center gap-2 text-sm text-lime-700 hover:text-lime-900 transition-colors"
               >
                 <ChevronLeft className="w-4 h-4" />
                 Menú principal
@@ -94,7 +114,7 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
             </button>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-[#203c42] mt-4 text-center">
-            Gelificar
+            Nixtamalizar
           </h2>
         </div>
 
@@ -104,13 +124,13 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
           {/* Selección de ingrediente */}
           {!selectedIngredient && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {Object.keys(gelificantes).map((name) => (
+              {Object.keys(nixtamalizadores).map((name) => (
                 <button
                   key={name}
                   onClick={() => setSelectedIngredient(name)}
-                  className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg hover:bg-amber-100 hover:border-amber-300 text-sm font-medium text-amber-900 cursor-pointer transition-all"
+                  className="flex items-center gap-3 p-4 bg-lime-50 border border-lime-200 rounded-lg hover:bg-lime-100 hover:border-lime-300 text-sm font-medium text-lime-900 cursor-pointer transition-all"
                 >
-                  <Cuboid className="w-5 h-5 text-amber-600" />
+                  <Flame className="w-5 h-5 text-lime-600" />
                   {name}
                 </button>
               ))}
@@ -118,36 +138,31 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
           )}
 
           {/* Detalle del ingrediente */}
-          {selectedIngredient && !selectedTexture && (
+          {selectedIngredient && !selectedContext && (
             <>
-              <button onClick={resetAll} className="flex items-center gap-1 text-sm text-amber-700 hover:text-amber-900 transition-colors">
+              <button onClick={resetAll} className="flex items-center gap-1 text-sm text-lime-700 hover:text-lime-900 transition-colors">
                 <ChevronLeft className="w-4 h-4" />
                 Volver a ingredientes
               </button>
 
-              <div className="bg-gradient-to-br from-amber-50 to-white p-6 rounded-lg border border-amber-200 space-y-6 shadow-sm">
+              <div className="bg-gradient-to-br from-lime-50 to-white p-6 rounded-lg border border-lime-200 space-y-6 shadow-sm">
                 <h3 className="text-lg font-bold text-gray-800">{selectedIngredient}</h3>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <h4 className="font-semibold text-gray-700 mb-1">Origen</h4>
-                    <p className="text-sm text-gray-600">{gelificantes[selectedIngredient].origin}</p>
+                    <p className="text-sm text-gray-600">{nixtamalizadores[selectedIngredient].origin}</p>
                   </div>
                   <div>
                     <h4 className="font-semibold text-gray-700 mb-1">pH</h4>
-                    <p className="text-sm text-gray-600">{gelificantes[selectedIngredient].ph}</p>
+                    <p className="text-sm text-gray-600">{nixtamalizadores[selectedIngredient].ph}</p>
                   </div>
                 </div>
-
-                <p className="text-sm text-gray-600">
-                  <strong>Hidratación:</strong> {gelificantes[selectedIngredient].hydrationTemp} |{' '}
-                  <strong>Gelificación:</strong> {gelificantes[selectedIngredient].gelTemp}
-                </p>
 
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-2">Características</h4>
                   <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-                    {gelificantes[selectedIngredient].characteristics.map((char, idx) => (
+                    {nixtamalizadores[selectedIngredient].characteristics.map((char, idx) => (
                       <li key={idx}>{char}</li>
                     ))}
                   </ul>
@@ -156,8 +171,8 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-2">Aplicaciones</h4>
                   <div className="flex flex-wrap gap-2">
-                    {gelificantes[selectedIngredient].applications.map((app, idx) => (
-                      <span key={idx} className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-medium">
+                    {nixtamalizadores[selectedIngredient].applications.map((app, idx) => (
+                      <span key={idx} className="bg-lime-100 text-lime-800 px-3 py-1 rounded-full text-xs font-medium">
                         {app}
                       </span>
                     ))}
@@ -167,29 +182,23 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-2">Dosificaciones</h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {gelificantes[selectedIngredient].dosages.map((d, idx) => (
+                    {nixtamalizadores[selectedIngredient].dosages.map((d, idx) => (
                       <button
                         key={idx}
-                        onClick={() => setSelectedTexture(d.texture)}
-                        className="text-left p-4 border-2 border-gray-200 rounded-lg hover:bg-amber-50 hover:border-amber-300 bg-white cursor-pointer transition-all"
+                        onClick={() => setSelectedContext(d.context)}
+                        className="text-left p-4 border-2 border-gray-200 rounded-lg hover:bg-lime-50 hover:border-lime-300 bg-white cursor-pointer transition-all"
                       >
-                        <p className="text-sm font-semibold text-gray-800">{d.texture}</p>
-                        <p className="text-sm text-amber-700 font-medium">{d.amount}</p>
+                        <p className="text-sm font-semibold text-gray-800">{d.context}</p>
+                        <p className="text-sm text-lime-700 font-medium">{d.amount}</p>
                       </button>
                     ))}
                   </div>
-
-                  {gelificantes[selectedIngredient].maxDosage && (
-                    <div className="text-xs text-red-600 mt-3 bg-red-50 p-2 rounded">
-                      <strong>⚠️ Dosificación máxima:</strong> {gelificantes[selectedIngredient].maxDosage}
-                    </div>
-                  )}
                 </div>
 
                 <div>
                   <h4 className="font-semibold text-gray-700 mb-2">Instrucciones</h4>
                   <ol className="list-decimal list-inside text-sm text-gray-700 space-y-2">
-                    {gelificantes[selectedIngredient].instructions.map((step, idx) => (
+                    {nixtamalizadores[selectedIngredient].instructions.map((step, idx) => (
                       <li key={idx}>{step}</li>
                     ))}
                   </ol>
@@ -199,36 +208,42 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
           )}
 
           {/* Calculadora de dosis */}
-          {selectedIngredient && selectedTexture && (
+          {selectedIngredient && selectedContext && (
             <>
-              <button onClick={resetToIngredient} className="flex items-center gap-1 text-sm text-amber-700 hover:text-amber-900 transition-colors">
+              <button onClick={resetToIngredient} className="flex items-center gap-1 text-sm text-lime-700 hover:text-lime-900 transition-colors">
                 <ChevronLeft className="w-4 h-4" />
-                Volver a texturas de {selectedIngredient}
+                Volver a contextos de {selectedIngredient}
               </button>
 
-              <div className="bg-white border-2 border-amber-200 rounded-lg p-6">
+              <div className="bg-white border-2 border-lime-200 rounded-lg p-6">
                 <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                  <Calculator className="text-amber-500" size={20} />
+                  <Calculator className="text-lime-500" size={20} />
                   Calculadora de dosis
                 </h3>
 
                 <div className="grid md:grid-cols-2 gap-4 mb-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Cantidad de líquido (ml)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Cantidad {(() => {
+                        const dosage = nixtamalizadores[selectedIngredient!].dosages.find(d => d.context === selectedContext);
+                        const unit = dosage ? getDosageUnit(dosage.amount) : 'g_per_l';
+                        return unit === 'g_per_kg' ? '(g o kg)' : '(ml o L)';
+                      })()}
+                    </label>
                     <input
                       type="number"
                       value={liquidAmount}
                       onChange={(e) => setLiquidAmount(e.target.value)}
                       placeholder="1000"
-                      className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all"
+                      className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-lime-500 focus:border-lime-500 outline-none transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Textura seleccionada</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Contexto seleccionado</label>
                     <input
                       disabled
-                      value={selectedTexture}
+                      value={selectedContext}
                       className="w-full p-3 border-2 bg-gray-50 border-gray-300 rounded-lg text-sm text-gray-700"
                     />
                   </div>
@@ -236,15 +251,19 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
 
                 {/* Slider para rangos */}
                 {(() => {
-                  const dosage = gelificantes[selectedIngredient!].dosages.find(d => d.texture === selectedTexture);
-                  const range = dosage ? getDosageRange(dosage.amount) : null;
+                  const dosage = nixtamalizadores[selectedIngredient!].dosages.find(d => d.context === selectedContext);
+                  if (!dosage) return null;
+
+                  const range = getDosageRange(dosage.amount);
+                  const unitType = getDosageUnit(dosage.amount);
+                  const unitLabel = unitType === 'percent' ? '%' : unitType === 'g_per_kg' ? 'g/kg' : 'g/L';
 
                   if (range && range[0] !== range[1]) {
                     const [min, max] = range;
                     return (
                       <div className="mb-6">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Selecciona dosis en g/L: <strong className="text-amber-600">{customDosageValue ?? min}</strong>
+                          Selecciona dosis: <strong className="text-lime-600">{customDosageValue ?? min} {unitLabel}</strong>
                         </label>
                         <input
                           type="range"
@@ -253,11 +272,11 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
                           step="0.1"
                           value={customDosageValue ?? min}
                           onChange={(e) => setCustomDosageValue(e.target.value)}
-                          className="w-full h-2 bg-amber-200 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                          className="w-full h-2 bg-lime-200 rounded-lg appearance-none cursor-pointer accent-lime-500"
                         />
                         <div className="flex justify-between text-sm text-gray-600 mt-1">
-                          <span>{min}g/L</span>
-                          <span>{max}g/L</span>
+                          <span>{min}{unitLabel}</span>
+                          <span>{max}{unitLabel}</span>
                         </div>
                       </div>
                     );
@@ -279,7 +298,11 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
                       de <strong>{selectedIngredient}</strong>
                     </div>
                     <div className="text-sm text-green-600 mt-2 pt-2 border-t border-green-200">
-                      Para {liquidAmount}ml con textura de <strong>{selectedTexture}</strong> ({calculation.originalDosage})
+                      Para {liquidAmount}{(() => {
+                        const dosage = nixtamalizadores[selectedIngredient!].dosages.find(d => d.context === selectedContext);
+                        const unit = dosage ? getDosageUnit(dosage.amount) : 'g_per_l';
+                        return unit === 'g_per_kg' ? 'g' : 'ml';
+                      })()} en <strong>{selectedContext}</strong> ({calculation.originalDosage})
                     </div>
                   </div>
                 )}
@@ -292,4 +315,4 @@ const GelificantesModal: React.FC<GelificantesModalProps> = ({ isOpen, onClose }
   );
 };
 
-export default GelificantesModal;
+export default NixtamalizarModal;
