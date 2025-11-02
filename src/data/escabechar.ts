@@ -2,574 +2,496 @@
 
 export interface EscabecheIngredient {
   name: string;
-  amount: string; // Relativo a aceite, ej: "30% del aceite", "10g/L de aceite"
-  optional?: boolean;
+  amount: string;
+  unit: string;
 }
 
 export interface EscabecheRecipe {
   name: string;
   description: string;
-  type: 'pescado' | 'ave' | 'carne' | 'vegetal';
-  oilType: string[];
-  vinegarRatio: string; // % respecto al aceite
+  type: 'pescado' | 'ave' | 'carne' | 'vegetal' | 'otro';
+  yield: string; // Rendimiento de la receta
   ingredients: EscabecheIngredient[];
-  spices: string[];
   preparation: string[];
-  cookingTemp?: string;
   cookingTime?: string;
-  marinadeTime: string;
-  storage: string;
+  marinadeTime?: string;
+  storage?: string;
   tips: string[];
-  uses: string[];
 }
 
 export interface EscabecheCategory {
   name: string;
   description: string;
   recipes: EscabecheRecipe[];
-  generalTips: string[];
 }
 
 export const escabeches: Record<string, EscabecheCategory> = {
-  'Pescados y Mariscos': {
-    name: 'Pescados y Mariscos',
-    description: 'Escabeches clásicos de pescados y mariscos, perfectos como tapas o entrantes',
-    recipes: [
-      {
-        name: 'Escabeche de Pescado Blanco',
-        description: 'Clásico escabeche español con pescado frito',
-        type: 'pescado',
-        oilType: ['Aceite de oliva virgen extra', 'Aceite de oliva suave'],
-        vinegarRatio: '20-25%',
-        ingredients: [
-          { name: 'Cebolla', amount: '100g por litro de aceite' },
-          { name: 'Zanahoria', amount: '80g por litro de aceite' },
-          { name: 'Ajo', amount: '4-6 dientes por litro' },
-          { name: 'Puerro', amount: '50g por litro de aceite', optional: true }
-        ],
-        spices: [
-          'Hojas de laurel',
-          'Granos de pimienta negra',
-          'Pimentón dulce',
-          'Tomillo o romero fresco'
-        ],
-        preparation: [
-          'Freír el pescado previamente enharinado hasta dorar',
-          'Retirar y colocar en recipiente profundo',
-          'En el mismo aceite, sofreír cebolla y zanahoria en juliana',
-          'Añadir ajo laminado y las especias',
-          'Cuando las verduras estén tiernas, añadir el vinagre',
-          'Cocinar 3-4 minutos para que reduzca el alcohol',
-          'Verter el escabeche caliente sobre el pescado',
-          'Asegurarse de que el pescado quede completamente cubierto',
-          'Dejar enfriar a temperatura ambiente',
-          'Refrigerar mínimo 12 horas antes de consumir'
-        ],
-        cookingTemp: 'Fuego medio-alto para freír, medio para escabeche',
-        cookingTime: '15-20 minutos',
-        marinadeTime: '12-48 horas',
-        storage: 'Refrigerado: 5-7 días',
-        tips: [
-          'El pescado debe quedar completamente cubierto de aceite',
-          'Mejor con pescados de carne firme: lubina, dorada, bacalao',
-          'El sabor mejora al segundo día',
-          'Servir a temperatura ambiente'
-        ],
-        uses: ['Tapa española', 'Entrante frío', 'Picoteo', 'Comida de verano']
-      },
-      {
-        name: 'Escabeche de Sardinas',
-        description: 'Sardinas en escabeche casero, tradición mediterránea',
-        type: 'pescado',
-        oilType: ['Aceite de oliva virgen extra'],
-        vinegarRatio: '25-30%',
-        ingredients: [
-          { name: 'Cebolla', amount: '120g por litro de aceite' },
-          { name: 'Zanahoria', amount: '100g por litro de aceite' },
-          { name: 'Ajo', amount: '6-8 dientes por litro' }
-        ],
-        spices: [
-          'Hojas de laurel',
-          'Orégano seco',
-          'Granos de pimienta',
-          'Pimentón de la Vera'
-        ],
-        preparation: [
-          'Limpiar sardinas, quitar cabeza y vísceras',
-          'Salar ligeramente y dejar reposar 15 minutos',
-          'Freír sardinas hasta que estén doradas',
-          'Colocar en recipiente de vidrio',
-          'Sofreír verduras en juliana fina',
-          'Añadir especias y tostar ligeramente',
-          'Incorporar vinagre y cocinar 5 minutos',
-          'Verter sobre las sardinas caliente',
-          'Dejar enfriar y refrigerar 24 horas'
-        ],
-        cookingTemp: 'Fuego medio-alto',
-        cookingTime: '20 minutos',
-        marinadeTime: '24-72 horas',
-        storage: 'Refrigerado: 1 semana',
-        tips: [
-          'Sardinas frescas son esenciales',
-          'El vinagre ayuda a ablandar las espinas',
-          'Excelente para conservar sardinas de temporada',
-          'Se puede enlatar si se procesa correctamente'
-        ],
-        uses: ['Tapa tradicional', 'Bocadillo', 'Sobre tostadas', 'Ensalada']
-      },
-      {
-        name: 'Escabeche de Mejillones',
-        description: 'Mejillones en escabeche suave y aromático',
-        type: 'pescado',
-        oilType: ['Aceite de oliva suave', 'Aceite de girasol'],
-        vinegarRatio: '15-20%',
-        ingredients: [
-          { name: 'Cebolla', amount: '80g por litro de aceite' },
-          { name: 'Pimiento rojo', amount: '60g por litro de aceite' },
-          { name: 'Ajo', amount: '3-4 dientes por litro' }
-        ],
-        spices: [
-          'Hojas de laurel',
-          'Perejil fresco',
-          'Pimienta blanca',
-          'Clavo de olor (1-2 unidades)'
-        ],
-        preparation: [
-          'Cocer mejillones al vapor hasta que se abran',
-          'Extraer de las valvas y reservar',
-          'Sofreír cebolla y pimiento en juliana',
-          'Añadir ajo picado y especias',
-          'Incorporar vinagre y reducir 2 minutos',
-          'Añadir mejillones al escabeche',
-          'Cocinar suavemente 3-4 minutos',
-          'Trasladar a frasco de vidrio',
-          'Cubrir completamente con el líquido',
-          'Refrigerar mínimo 6 horas'
-        ],
-        cookingTemp: 'Fuego medio',
-        cookingTime: '15 minutos',
-        marinadeTime: '6-24 horas',
-        storage: 'Refrigerado: 4-5 días',
-        tips: [
-          'Desechar mejillones que no se abran',
-          'No sobrecocinar o quedarán gomosos',
-          'Guardar agua de cocción para sopas',
-          'Perfecto para aperitivo rápido'
-        ],
-        uses: ['Aperitivo', 'Tapa', 'Ensalada de arroz', 'Picoteo']
-      },
-      {
-        name: 'Escabeche de Pulpo',
-        description: 'Pulpo tierno en escabeche gallego',
-        type: 'pescado',
-        oilType: ['Aceite de oliva virgen extra'],
-        vinegarRatio: '20%',
-        ingredients: [
-          { name: 'Cebolla', amount: '100g por litro de aceite' },
-          { name: 'Pimiento verde', amount: '80g por litro de aceite' },
-          { name: 'Ajo', amount: '5-6 dientes por litro' },
-          { name: 'Caldo de cocción del pulpo', amount: '100ml por litro de aceite' }
-        ],
-        spices: [
-          'Hojas de laurel',
-          'Pimentón de la Vera (dulce y picante)',
-          'Pimienta negra'
-        ],
-        preparation: [
-          'Cocer pulpo con laurel hasta tierno (40-60 min)',
-          'Dejar enfriar en su caldo, cortar en rodajas',
-          'Sofreír cebolla y pimiento en juliana',
-          'Añadir ajo laminado y especias',
-          'Incorporar vinagre y caldo de cocción',
-          'Cocinar 5 minutos',
-          'Añadir pulpo y cocinar 2-3 minutos más',
-          'Trasladar a recipiente de vidrio',
-          'Enfriar y refrigerar 12-24 horas'
-        ],
-        cookingTemp: 'Fuego medio-bajo',
-        cookingTime: '10 minutos (escabeche)',
-        marinadeTime: '12-24 horas',
-        storage: 'Refrigerado: 5 días',
-        tips: [
-          'El pulpo debe estar muy tierno antes de escabechar',
-          'El caldo de cocción aporta mucho sabor',
-          'Excelente tapa gallega',
-          'Se puede congelar el pulpo antes de cocer'
-        ],
-        uses: ['Tapa', 'Entrante', 'Ensalada de pulpo', 'Empanada']
-      }
-    ],
-    generalTips: [
-      'Siempre usar pescado fresco y de calidad',
-      'El pescado debe quedar completamente cubierto de aceite',
-      'El vinagre ayuda a conservar y aporta acidez',
-      'Mejor en recipientes de vidrio o cerámica',
-      'El sabor mejora después de 24 horas',
-      'Servir a temperatura ambiente para mejor sabor'
-    ]
-  },
   'Aves y Carnes': {
     name: 'Aves y Carnes',
-    description: 'Escabeches de pollo, codorniz y otras carnes, técnica tradicional de conservación',
+    description: 'Escabeches tradicionales de aves de caza y carnes',
     recipes: [
       {
-        name: 'Escabeche de Pollo',
-        description: 'Pollo tierno en escabeche aromático',
+        name: 'Paloma Escabechada',
+        description: 'Escabeche tradicional de paloma con verduras',
         type: 'ave',
-        oilType: ['Aceite de oliva', 'Aceite de girasol'],
-        vinegarRatio: '20-25%',
+        yield: '6 palomas',
         ingredients: [
-          { name: 'Cebolla', amount: '120g por litro de aceite' },
-          { name: 'Zanahoria', amount: '100g por litro de aceite' },
-          { name: 'Ajo', amount: '6-8 dientes por litro' },
-          { name: 'Vino blanco', amount: '100ml por litro de aceite', optional: true }
-        ],
-        spices: [
-          'Hojas de laurel',
-          'Tomillo fresco',
-          'Romero',
-          'Granos de pimienta',
-          'Pimentón dulce'
+          { name: 'Palomas (con hígado y corazón)', amount: '6', unit: 'unidades' },
+          { name: 'Aceite de oliva suave', amount: '500', unit: 'g' },
+          { name: 'Cebolla en paisana', amount: '1', unit: 'unidad' },
+          { name: 'Zanahorias en paisana', amount: '2', unit: 'unidades' },
+          { name: 'Puerros en paisana', amount: '2', unit: 'unidades' },
+          { name: 'Ajos laminados', amount: '3', unit: 'dientes' },
+          { name: 'Vino blanco', amount: '250', unit: 'g' },
+          { name: 'Vinagre de vino blanco', amount: '500', unit: 'g' },
+          { name: 'Agua', amount: '250', unit: 'g' },
+          { name: 'Pimienta negra en grano', amount: 'c.s.', unit: '' },
+          { name: 'Tomillo', amount: 'c.s.', unit: '' },
+          { name: 'Laurel', amount: 'c.s.', unit: '' },
+          { name: 'Sal', amount: 'c.s.', unit: '' }
         ],
         preparation: [
-          'Trocear pollo en piezas medianas',
-          'Salpimentar y dorar en aceite hasta que esté cocido',
-          'Retirar y colocar en recipiente',
-          'En el mismo aceite, sofreír cebolla y zanahoria',
-          'Añadir ajo y especias, tostar ligeramente',
-          'Incorporar vinagre (y vino si se usa)',
-          'Cocinar 5-7 minutos a fuego medio',
-          'Verter sobre el pollo caliente',
-          'Asegurar que quede completamente cubierto',
-          'Enfriar y refrigerar 24 horas'
+          'Rehogar las palomas en el aceite de oliva hasta obtener un tono dorado',
+          'Añadir las verduras, el ajo, la pimienta negra, el tomillo, el laurel y dorar',
+          'Verter el vino blanco y dejar reducir hasta que se evapore el alcohol',
+          'Cocer durante 5 minutos',
+          'Agregar el vinagre y cubrir con el agua',
+          'Cocinar durante 3 horas hasta que las palomas estén tiernas',
+          'Poner a punto de sal y dejar enfriar a temperatura ambiente durante 12 horas',
+          'Pasar todo el conjunto a un recipiente hermético',
+          'Reservar en cámara a 3-4°C durante 24 horas'
         ],
-        cookingTemp: 'Fuego medio-alto para dorar, medio para escabeche',
-        cookingTime: '25-30 minutos',
-        marinadeTime: '24-48 horas',
-        storage: 'Refrigerado: 1 semana',
+        cookingTime: '3 horas',
+        marinadeTime: '24 horas',
+        storage: 'Refrigerado 3-4°C',
         tips: [
-          'Mejor con muslos y contramuslos (más jugosos)',
-          'El pollo debe estar bien cocido antes',
-          'Excelente para aprovechar pollo entero',
-          'Se puede servir frío o tibio'
-        ],
-        uses: ['Plato principal frío', 'Comida de verano', 'Picnic', 'Ensalada']
+          'Las palomas deben estar bien doradas antes de añadir líquidos',
+          'El tiempo de cocción largo es esencial para que queden tiernas',
+          'Dejar reposar mínimo 24h para que desarrolle sabor'
+        ]
       },
       {
-        name: 'Escabeche de Codornices',
-        description: 'Codornices en escabeche fino, receta gourmet',
+        name: 'Perdiz Escabechada',
+        description: 'Escabeche clásico de perdiz de caza',
         type: 'ave',
-        oilType: ['Aceite de oliva virgen extra'],
-        vinegarRatio: '25%',
+        yield: '3 perdices',
         ingredients: [
-          { name: 'Cebolla', amount: '100g por litro de aceite' },
-          { name: 'Zanahoria', amount: '80g por litro de aceite' },
-          { name: 'Chalota', amount: '60g por litro de aceite' },
-          { name: 'Ajo', amount: '4-5 dientes por litro' },
-          { name: 'Vino blanco', amount: '150ml por litro de aceite' }
-        ],
-        spices: [
-          'Hojas de laurel',
-          'Tomillo fresco',
-          'Enebro',
-          'Pimienta rosa y negra',
-          'Clavo de olor'
+          { name: 'Perdices sin interiores', amount: '3', unit: 'unidades' },
+          { name: 'Aceite', amount: '1', unit: 'litro' },
+          { name: 'Cebolla', amount: '1', unit: 'unidad' },
+          { name: 'Puerros', amount: '3', unit: 'unidades' },
+          { name: 'Zanahorias', amount: '3', unit: 'unidades' },
+          { name: 'Ajos laminados', amount: '4', unit: 'dientes' },
+          { name: 'Vinagre', amount: '1', unit: 'litro' },
+          { name: 'Vino blanco', amount: '500', unit: 'ml' },
+          { name: 'Agua', amount: '500', unit: 'ml' },
+          { name: 'Laurel', amount: 'c.s.', unit: '' },
+          { name: 'Pimienta negra en grano', amount: 'c.s.', unit: '' },
+          { name: 'Sal', amount: 'c.s.', unit: '' }
         ],
         preparation: [
-          'Limpiar y bridar codornices',
-          'Dorar en aceite hasta que estén bien cocidas',
-          'Reservar en recipiente hondo',
-          'Sofreír verduras en juliana fina',
-          'Añadir especias y tostar',
-          'Incorporar vino blanco y reducir a la mitad',
-          'Añadir vinagre y cocinar 5 minutos',
-          'Verter sobre codornices caliente',
-          'Enfriar y refrigerar 24-48 horas'
+          'Bridar las perdices',
+          'Rehogar en el aceite hasta que adquieran un tono dorado',
+          'Añadir todas las verduras cortadas en paisana, el ajo, el laurel y la pimienta negra',
+          'Seguir rehogando e incorporar el vinagre, el vino blanco y el agua',
+          'Poner punto de sal',
+          'Cocer durante 4 horas aproximadamente, hasta que las perdices estén tiernas',
+          'Dejar enfriar',
+          'Introducir en un recipiente hermético',
+          'Reservar en cámara a 3-4°C durante un mínimo de 48 horas'
         ],
-        cookingTemp: 'Fuego medio-alto',
-        cookingTime: '20-25 minutos',
-        marinadeTime: '24-48 horas',
-        storage: 'Refrigerado: 5-7 días',
+        cookingTime: '4 horas',
+        marinadeTime: '48 horas mínimo',
+        storage: 'Refrigerado 3-4°C',
         tips: [
-          'Las codornices deben quedar jugosas por dentro',
-          'Plato elegante para ocasiones especiales',
-          'Se pueden deshuesar antes para facilitar consumo',
-          'Mejor con codornices de granja'
-        ],
-        uses: ['Entrante gourmet', 'Plato principal', 'Ocasiones especiales']
+          'Bridar ayuda a mantener la forma durante la cocción larga',
+          'La cocción de 4 horas es necesaria para perdices tiernas',
+          'Reposar mínimo 48h mejora significativamente el sabor'
+        ]
       },
       {
-        name: 'Escabeche de Conejo',
-        description: 'Conejo tierno en escabeche rústico',
-        type: 'carne',
-        oilType: ['Aceite de oliva'],
-        vinegarRatio: '20-25%',
+        name: 'Codorniz Escabechada',
+        description: 'Escabeche aromático de codorniz con especias',
+        type: 'ave',
+        yield: '400g de pechuga',
         ingredients: [
-          { name: 'Cebolla', amount: '150g por litro de aceite' },
-          { name: 'Zanahoria', amount: '100g por litro de aceite' },
-          { name: 'Ajo', amount: '8-10 dientes por litro' },
-          { name: 'Vino tinto', amount: '200ml por litro de aceite', optional: true }
-        ],
-        spices: [
-          'Hojas de laurel',
-          'Romero fresco',
-          'Tomillo',
-          'Pimienta negra',
-          'Pimentón dulce'
+          { name: 'Pechuga de codorniz', amount: '400', unit: 'g' },
+          { name: 'Cebolla en juliana', amount: '90', unit: 'g' },
+          { name: 'Ajo laminado', amount: '8', unit: 'g' },
+          { name: 'Aceite', amount: '200', unit: 'g' },
+          { name: 'Zanahoria en juliana', amount: '40', unit: 'g' },
+          { name: 'Sal', amount: '10', unit: 'g' },
+          { name: 'Pimienta negra en grano', amount: '6', unit: 'g' },
+          { name: 'Pimentón dulce Tap de Cortí', amount: '9', unit: 'g' },
+          { name: 'Enebro', amount: '5', unit: 'g' },
+          { name: 'Clavo de olor', amount: '3', unit: 'g' },
+          { name: 'Canela en rama', amount: '7', unit: 'g' },
+          { name: 'Azúcar moreno', amount: '50', unit: 'g' },
+          { name: 'Agua', amount: '200', unit: 'g' },
+          { name: 'Zumo de naranja', amount: '100', unit: 'g' },
+          { name: 'Vinagre de sidra', amount: '200', unit: 'g' }
         ],
         preparation: [
-          'Trocear conejo en piezas',
-          'Marinar con sal, pimienta y hierbas 1 hora',
-          'Dorar bien en aceite hasta cocinar',
-          'Reservar en cazuela de barro',
-          'Sofreír verduras en el mismo aceite',
-          'Añadir especias y ajo',
-          'Incorporar vinagre (y vino si se usa)',
-          'Cocinar 8-10 minutos',
-          'Verter sobre el conejo',
-          'Enfriar y refrigerar 24-48 horas'
+          'Limpiar las pechugas de codorniz y disponer en un recipiente hondo',
+          'Sofreír la cebolla y el ajo en una olla',
+          'Una vez dorados, agregar la zanahoria y rehogar hasta que resulte tierna',
+          'Añadir la sal, pimienta, pimentón, enebro, clavo y canela',
+          'Cocinar a fuego medio durante 20-30 segundos',
+          'Incorporar el azúcar moreno y disolver',
+          'Agregar el agua y el zumo de naranja, llevar a ebullición',
+          'Añadir el vinagre y dejar reducir ⅓',
+          'Retirar del fuego y verter en caliente sobre las pechugas',
+          'Dejar escabechar en cámara durante 12 horas',
+          'Extraer las pechugas y secar sobre papel absorbente',
+          'En el momento del pase: salpimentar, brasear y cortar en siete trozos'
         ],
-        cookingTemp: 'Fuego medio',
-        cookingTime: '35-40 minutos',
-        marinadeTime: '24-48 horas',
-        storage: 'Refrigerado: 1 semana',
+        cookingTime: '20-30 minutos',
+        marinadeTime: '12 horas',
+        storage: 'Refrigerado',
         tips: [
-          'El conejo debe estar muy tierno',
-          'Plato tradicional de caza',
-          'Mejora mucho al segundo día',
-          'Servir con pan rústico'
-        ],
-        uses: ['Plato tradicional', 'Comida campestre', 'Ocasión especial']
-      },
-      {
-        name: 'Escabeche de Cerdo (Lomo)',
-        description: 'Lomo de cerdo en escabeche suave',
-        type: 'carne',
-        oilType: ['Aceite de oliva', 'Aceite de girasol'],
-        vinegarRatio: '15-20%',
-        ingredients: [
-          { name: 'Cebolla', amount: '100g por litro de aceite' },
-          { name: 'Pimiento rojo', amount: '80g por litro de aceite' },
-          { name: 'Ajo', amount: '5-6 dientes por litro' }
-        ],
-        spices: [
-          'Hojas de laurel',
-          'Orégano',
-          'Pimentón dulce',
-          'Comino',
-          'Pimienta negra'
-        ],
-        preparation: [
-          'Cortar lomo en medallones gruesos',
-          'Salpimentar y dorar bien por ambos lados',
-          'Terminar cocción hasta 65°C interno',
-          'Reservar en recipiente',
-          'Sofreír verduras en juliana',
-          'Añadir especias y tostar',
-          'Incorporar vinagre y cocinar 5 minutos',
-          'Verter sobre el lomo',
-          'Enfriar y refrigerar 12-24 horas'
-        ],
-        cookingTemp: 'Fuego medio-alto para sellar, medio para terminar',
-        cookingTime: '20 minutos',
-        marinadeTime: '12-24 horas',
-        storage: 'Refrigerado: 5-7 días',
-        tips: [
-          'No sobrecocinar el lomo para que quede jugoso',
-          'Cortar en lonchas finas al servir',
-          'Excelente para bocadillos',
-          'Más suave que otros escabeches'
-        ],
-        uses: ['Bocadillo', 'Plato frío', 'Tapas', 'Ensalada']
+          'Las especias deben tostarse brevemente para liberar aromas',
+          'El zumo de naranja aporta dulzor y acidez equilibrada',
+          'Brasear justo antes de servir para mejor textura'
+        ]
       }
-    ],
-    generalTips: [
-      'La carne debe estar completamente cocida antes de escabechar',
-      'Dorar bien para sellar jugos y dar sabor',
-      'El escabeche ayuda a conservar y ablandar',
-      'Mejor con cortes tiernos o aves pequeñas',
-      'Servir a temperatura ambiente',
-      'El sabor se intensifica con los días'
+    ]
+  },
+  'Pescados': {
+    name: 'Pescados',
+    description: 'Escabeches de pescado y mariscos',
+    recipes: [
+      {
+        name: 'Escabeche de Trucha',
+        description: 'Trucha al vacío con escabeche',
+        type: 'pescado',
+        yield: '500g de trucha',
+        ingredients: [
+          { name: 'Trucha', amount: '500', unit: 'g' },
+          { name: 'Cebolleta', amount: '1', unit: 'unidad' },
+          { name: 'Limón', amount: '1', unit: 'unidad' },
+          { name: 'Guindilla', amount: 'c.s.', unit: '' },
+          { name: 'Vino blanco', amount: '500', unit: 'ml' },
+          { name: 'Salsa de soja', amount: 'c.s.', unit: '' },
+          { name: 'Cabeza de ajo', amount: '1', unit: 'unidad' },
+          { name: 'Aceite de oliva', amount: '500', unit: 'ml' },
+          { name: 'Vinagre de Jerez', amount: '250', unit: 'ml' },
+          { name: 'Vinagre balsámico', amount: '250', unit: 'ml' },
+          { name: 'Hojas de laurel', amount: '4', unit: 'unidades' },
+          { name: 'Sal', amount: 'c.s.', unit: '' },
+          { name: 'Pimienta en grano', amount: 'c.s.', unit: '' }
+        ],
+        preparation: [
+          'Cortar el tallo de la cebolleta y picar el ajo',
+          'Cocer en una sartén con el vino blanco y el aceite de oliva',
+          'Añadir la guindilla, granos de pimienta, laurel, los vinagres y salsa de soja',
+          'Cocinar durante 25 minutos y reservar',
+          'Limpiar y abrir la trucha',
+          'Sazonar, colocar un par de rodajas de limón y cerrar',
+          'Introducir en una bolsa de vacío la trucha junto al escabeche',
+          'Cocinar al vacío a 65°C durante 10 minutos'
+        ],
+        cookingTime: '25 min + 10 min vacío',
+        marinadeTime: 'Inmediato',
+        storage: 'Consumir recién hecho',
+        tips: [
+          'La cocción al vacío mantiene la trucha jugosa',
+          'Los dos tipos de vinagre aportan complejidad',
+          'Las rodajas de limón aromatizan desde dentro'
+        ]
+      }
     ]
   },
   'Vegetales': {
     name: 'Vegetales',
-    description: 'Escabeches de verduras, perfectos como guarnición o tapa vegetariana',
+    description: 'Escabeches de verduras y hortalizas',
     recipes: [
       {
-        name: 'Berenjenas en Escabeche',
-        description: 'Berenjenas tiernas en escabeche aromático',
+        name: 'Puré de Zanahoria Escabechada',
+        description: 'Puré cremoso con sabor a escabeche',
         type: 'vegetal',
-        oilType: ['Aceite de oliva virgen extra'],
-        vinegarRatio: '20-25%',
+        yield: '200g de zanahoria',
         ingredients: [
-          { name: 'Cebolla', amount: '80g por litro de aceite' },
-          { name: 'Ajo', amount: '6-8 dientes por litro' },
-          { name: 'Pimiento rojo', amount: '60g por litro de aceite', optional: true }
-        ],
-        spices: [
-          'Orégano seco',
-          'Hojas de laurel',
-          'Comino molido',
-          'Pimentón dulce',
-          'Perejil fresco'
+          { name: 'Zanahoria', amount: '200', unit: 'g' },
+          { name: 'Agua', amount: '1', unit: 'litro' },
+          { name: 'Hoja de laurel', amount: '1', unit: 'unidad' },
+          { name: 'Aceite de oliva virgen extra', amount: '20', unit: 'g' },
+          { name: 'Vinagre de Jerez', amount: '20', unit: 'g' },
+          { name: 'Sal', amount: 'c.s.', unit: '' },
+          { name: 'Pimienta negra recién molida', amount: 'c.s.', unit: '' },
+          { name: 'Comino en polvo', amount: 'c.s.', unit: '' }
         ],
         preparation: [
-          'Cortar berenjenas en rodajas de 1cm',
-          'Salar y dejar sudar 30 minutos',
-          'Enjuagar y secar bien',
-          'Freír en aceite hasta dorar',
-          'Colocar en recipiente de vidrio',
-          'Sofreír cebolla y ajo en el aceite',
-          'Añadir especias y tostar',
-          'Incorporar vinagre y cocinar 3 minutos',
-          'Verter sobre berenjenas caliente',
-          'Enfriar y refrigerar 12-24 horas'
+          'Pelar y cortar la zanahoria en rodajas',
+          'Introducir en una olla con el agua y la hoja de laurel',
+          'Llevar a ebullición y cocer durante 20 minutos hasta que esté tierna',
+          'Triturar la zanahoria con el aceite y el vinagre hasta obtener un puré liso',
+          'Pasar por un colador fino',
+          'Salpimentar y agregar comino en polvo',
+          'Introducir en una manga y reservar'
         ],
-        cookingTemp: 'Fuego medio-alto',
-        cookingTime: '15-20 minutos',
-        marinadeTime: '12-24 horas',
-        storage: 'Refrigerado: 1 semana',
+        cookingTime: '20 minutos',
+        marinadeTime: 'No requiere',
+        storage: 'Refrigerado: 2-3 días',
         tips: [
-          'Salar las berenjenas elimina amargor',
-          'No empapar demasiado de aceite al freír',
-          'Mejor con berenjenas medianas',
-          'Excelente tapa vegetariana'
-        ],
-        uses: ['Tapa', 'Guarnición', 'Bocadillo', 'Ensalada']
+          'El comino aporta un toque especiado característico',
+          'Colar bien para textura sedosa',
+          'Usar manga pastelera para emplatado elegante'
+        ]
       },
-      {
-        name: 'Calabacín en Escabeche',
-        description: 'Calabacín suave en escabeche ligero',
-        type: 'vegetal',
-        oilType: ['Aceite de oliva'],
-        vinegarRatio: '20%',
+            {
+        name: 'Escabeche de Remolacha',
+        description: 'Escabeche dulce con licuado de remolacha',
+        type: 'otro',
+        yield: '400g licuado',
         ingredients: [
-          { name: 'Cebolla', amount: '70g por litro de aceite' },
-          { name: 'Ajo', amount: '4-5 dientes por litro' },
-          { name: 'Zanahoria', amount: '50g por litro de aceite', optional: true }
-        ],
-        spices: [
-          'Hojas de laurel',
-          'Tomillo fresco',
-          'Menta fresca',
-          'Pimienta negra'
+          { name: 'Licuado de remolacha', amount: '400', unit: 'g' },
+          { name: 'Vinagre de Módena', amount: '50', unit: 'g' },
+          { name: 'Azúcar moreno', amount: '25', unit: 'g' },
+          { name: 'Granos de pimienta de Jamaica', amount: '8', unit: 'unidades' },
+          { name: 'Clavos', amount: '3', unit: 'unidades' },
+          { name: 'Pimienta rosa', amount: '3', unit: 'g' },
+          { name: 'Anís estrellado', amount: '1', unit: 'unidad' },
+          { name: 'Rama de canela', amount: '0,5', unit: 'unidad' },
+          { name: 'Tomillo', amount: 'c.s.', unit: '' }
         ],
         preparation: [
-          'Cortar calabacín en rodajas gruesas',
-          'Marcar a la plancha o freír ligeramente',
-          'No cocinar completamente, debe quedar firme',
-          'Colocar en recipiente',
-          'Sofreír cebolla y ajo',
-          'Añadir hierbas frescas y especias',
-          'Incorporar vinagre y cocinar 3 minutos',
-          'Verter sobre calabacín',
-          'Enfriar y refrigerar 6-12 horas'
+          'Introducir todos los ingredientes en un cazo',
+          'Llevar a ebullición',
+          'Cocer a fuego suave 10 minutos',
+          'Retirar del fuego y filmar',
+          'Dejar infusionar 12 horas',
+          'Colar y reservar'
         ],
-        cookingTemp: 'Fuego medio-alto',
-        cookingTime: '10-15 minutos',
-        marinadeTime: '6-12 horas',
-        storage: 'Refrigerado: 5 días',
-        tips: [
-          'El calabacín debe quedar al dente',
-          'Escabeche ligero y refrescante',
-          'Perfecto para verano',
-          'Se puede hacer con calabacín crudo'
-        ],
-        uses: ['Guarnición', 'Ensalada', 'Tapa ligera', 'Bowl vegetariano']
-      },
-      {
-        name: 'Champiñones en Escabeche',
-        description: 'Champiñones en escabeche rápido',
-        type: 'vegetal',
-        oilType: ['Aceite de oliva', 'Aceite de girasol'],
-        vinegarRatio: '25-30%',
-        ingredients: [
-          { name: 'Cebolla', amount: '60g por litro de aceite' },
-          { name: 'Ajo', amount: '5-6 dientes por litro' },
-          { name: 'Chalota', amount: '40g por litro de aceite', optional: true }
-        ],
-        spices: [
-          'Hojas de laurel',
-          'Tomillo',
-          'Perejil fresco',
-          'Pimienta negra',
-          'Pimentón dulce'
-        ],
-        preparation: [
-          'Limpiar champiñones con trapo húmedo',
-          'Cortar en cuartos o mitades',
-          'Saltear rápidamente en aceite',
-          'No deben soltar agua, fuego alto',
-          'Reservar en frasco',
-          'Sofreír cebolla y ajo en el aceite',
-          'Añadir especias',
-          'Incorporar vinagre y cocinar 2 minutos',
-          'Verter sobre champiñones',
-          'Enfriar y refrigerar 4-6 horas'
-        ],
-        cookingTemp: 'Fuego alto para champiñones, medio para escabeche',
         cookingTime: '10 minutos',
-        marinadeTime: '4-6 horas',
+        marinadeTime: '12 horas',
         storage: 'Refrigerado: 1 semana',
         tips: [
-          'No lavar champiñones, solo limpiar',
-          'Cocción rápida a fuego alto',
-          'Listos para consumir en pocas horas',
-          'Perfectos para aperitivo'
-        ],
-        uses: ['Tapa', 'Aperitivo', 'Ensalada', 'Picoteo']
+          'La infusión larga desarrolla los aromas',
+          'El color intenso es espectacular',
+          'Versátil para distintas aplicaciones'
+        ]
       },
       {
-        name: 'Alcachofas en Escabeche',
-        description: 'Alcachofas tiernas en escabeche mediterráneo',
+        name: 'Terrina de Escabeche de Coliflor',
+        description: 'Coliflor escabechada gelificada con agar',
         type: 'vegetal',
-        oilType: ['Aceite de oliva virgen extra'],
-        vinegarRatio: '15-20%',
+        yield: '600g de coliflor',
         ingredients: [
-          { name: 'Cebolla', amount: '50g por litro de aceite' },
-          { name: 'Ajo', amount: '6-8 dientes por litro' },
-          { name: 'Limón', amount: '1 por litro de aceite' }
-        ],
-        spices: [
-          'Hojas de laurel',
-          'Hierbas provenzales',
-          'Pimienta negra',
-          'Cilantro en grano'
+          { name: 'Coliflor rallada', amount: '600', unit: 'g' },
+          { name: 'Cebolla en brunoise', amount: '200', unit: 'g' },
+          { name: 'Zanahoria en brunoise', amount: '70', unit: 'g' },
+          { name: 'Ajo en brunoise', amount: '10', unit: 'g' },
+          { name: 'Pimentón dulce', amount: '10', unit: 'g' },
+          { name: 'Vinagre de sidra', amount: '300', unit: 'g' },
+          { name: 'Agua', amount: '400', unit: 'g' },
+          { name: 'Aceite de oliva suave', amount: '200', unit: 'g' },
+          { name: 'Hoja de laurel', amount: '1', unit: 'unidad' },
+          { name: 'Canela en rama', amount: '20', unit: 'g' },
+          { name: 'Clavos de olor', amount: '4', unit: 'unidades' },
+          { name: 'Anís estrellado', amount: '2', unit: 'unidades' },
+          { name: 'Agar agar', amount: '16', unit: 'g' }
         ],
         preparation: [
-          'Limpiar alcachofas, quitar hojas duras',
-          'Cortar en cuartos, frotar con limón',
-          'Blanquear en agua con limón 5 minutos',
-          'Escurrir bien',
-          'Freír ligeramente en aceite',
-          'Colocar en frasco',
-          'Sofreír cebolla y ajo',
-          'Añadir especias, vinagre y zumo de limón',
-          'Cocinar 3 minutos',
-          'Verter sobre alcachofas',
-          'Enfriar y refrigerar 12 horas'
+          'Sofreír la brunoise de cebolla, zanahoria y ajo',
+          'Incorporar el pimentón dulce y el vinagre de sidra',
+          'Dejar reducir el vinagre a la mitad',
+          'Agregar el agua, el aceite y las especias',
+          'Cocer durante 10 minutos y colar',
+          'Añadir el agar agar y llevar a ebullición',
+          'Retirar del fuego e incorporar la coliflor rallada',
+          'Extender en una bandeja y dejar gelificar en cámara',
+          'Cortar en dados de 1 cm de lado'
         ],
-        cookingTemp: 'Fuego medio',
-        cookingTime: '15 minutos',
-        marinadeTime: '12-24 horas',
-        storage: 'Refrigerado: 1 semana',
+        cookingTime: '10 minutos',
+        marinadeTime: 'Gelificación',
+        storage: 'Refrigerado: 3-4 días',
         tips: [
-          'Alcachofas pequeñas son más tiernas',
-          'El limón evita oxidación',
-          'Escabeche suave y delicado',
-          'Excelente antipasto'
+          'El agar agar debe hervir para activarse',
+          'Cortar en dados uniformes para presentación',
+          'La coliflor se añade cruda al final'
+        ]
+      },
+      {
+        name: 'Patata en Escabeche',
+        description: 'Patatas escabechadas con especias',
+        type: 'vegetal',
+        yield: '500g de patata',
+        ingredients: [
+          { name: 'Patata', amount: '500', unit: 'g' },
+          { name: 'Cebolla en brunoise', amount: '100', unit: 'g' },
+          { name: 'Zanahoria en brunoise', amount: '70', unit: 'g' },
+          { name: 'Ajo en brunoise', amount: '10', unit: 'g' },
+          { name: 'Aceite de oliva suave', amount: '500', unit: 'g' },
+          { name: 'Vinagre de sidra', amount: '500', unit: 'g' },
+          { name: 'Pimentón dulce', amount: '10', unit: 'g' },
+          { name: 'Enebro', amount: '5', unit: 'g' },
+          { name: 'Clavo de olor', amount: '3', unit: 'g' },
+          { name: 'Rama de canela', amount: '1', unit: 'unidad' },
+          { name: 'Hojas de laurel', amount: '2', unit: 'unidades' },
+          { name: 'Sal', amount: '15', unit: 'g' },
+          { name: 'Pimienta negra recién molida', amount: '3', unit: 'g' },
+          { name: 'Agua', amount: '1', unit: 'litro' }
         ],
-        uses: ['Antipasto', 'Ensalada', 'Guarnición', 'Tabla de quesos']
+        preparation: [
+          'Sofreír la cebolla, zanahoria y ajo en el aceite',
+          'Incorporar el vinagre y dejar reducir ⅓',
+          'Agregar pimentón, enebro, clavo, canela, laurel, sal y pimienta',
+          'Verter el agua y dejar reducir a la mitad',
+          'Colar y llevar el escabeche a ebullición',
+          'Añadir la patata pelada y cortada en dados de 1 cm',
+          'Cocer a fuego lento durante 10 minutos',
+          'Dejar enfriar',
+          'Calentar en su escabeche antes de servir'
+        ],
+        cookingTime: '10 minutos',
+        marinadeTime: 'En su escabeche',
+        storage: 'Refrigerado en líquido',
+        tips: [
+          'Las patatas Ratte son ideales por su textura',
+          'Cortar en dados uniformes para cocción pareja',
+          'Calentar justo antes de servir'
+        ]
+      },
+      {
+        name: 'Setas Escabechadas',
+        description: 'Setas con escabeche de miso',
+        type: 'vegetal',
+        yield: '500g de setas',
+        ingredients: [
+          { name: 'Setas', amount: '500', unit: 'g' },
+          { name: 'Ajos', amount: '3', unit: 'dientes' },
+          { name: 'Aceite de oliva 0.4', amount: '150', unit: 'g' },
+          { name: 'Vinagre de arroz', amount: '45', unit: 'g' },
+          { name: 'Rama de tomillo', amount: '1', unit: 'unidad' },
+          { name: 'Miso', amount: '250', unit: 'g' },
+          { name: 'Fondo de pollo', amount: '50', unit: 'g' }
+        ],
+        preparation: [
+          'Sofreír los ajos en el aceite',
+          'Agregar el vinagre y cocinar 2 minutos',
+          'Añadir el fondo de pollo, tomillo y miso',
+          'Llevar a ebullición, retirar y filmar',
+          'Dejar infusionar 30 minutos',
+          'Retirar el tomillo y triturar',
+          'Pasar por colador de malla fina',
+          'Envasar el escabeche con las setas',
+          'Cocinar al vacío a 65°C durante 3 minutos'
+        ],
+        cookingTime: '30 min + 3 min vacío',
+        marinadeTime: '30 minutos',
+        storage: 'Refrigerado: 2-3 días',
+        tips: [
+          'El miso de almendras aporta umami único',
+          'La cocción al vacío preserva textura',
+          'Ideal para tartar o como guarnición'
+        ]
+      },
+      {
+        name: 'Cogollo Escabechado',
+        description: 'Cogollos macerados en escabeche complejo',
+        type: 'vegetal',
+        yield: '2 cogollos',
+        ingredients: [
+          { name: 'Cogollos de lechuga', amount: '2', unit: 'unidades' },
+          { name: 'Vinagre balsámico blanco', amount: '240', unit: 'g' },
+          { name: 'Vinagre de manzana', amount: '500', unit: 'g' },
+          { name: 'Vinagre de Jerez', amount: '180', unit: 'g' },
+          { name: 'Aceite de girasol', amount: '300', unit: 'g' },
+          { name: 'AOVE', amount: '300', unit: 'g' },
+          { name: 'Cebolla en juliana', amount: '400', unit: 'g' },
+          { name: 'Ajo', amount: '30', unit: 'g' },
+          { name: 'Caldo de verduras', amount: '230', unit: 'g' },
+          { name: 'Pimienta negra en grano', amount: '5', unit: 'g' },
+          { name: 'Garum o colatura', amount: '30', unit: 'g' }
+        ],
+        preparation: [
+          'Mezclar los tres vinagres',
+          'Mezclar ambos aceites',
+          'Pochar la cebolla, ajo y pimienta en los aceites sin dorar',
+          'Agregar caldo y vinagres',
+          'Cocinar 5 minutos y dejar enfriar',
+          'Añadir el garum o colatura para punto de sal',
+          'Triturar y colar',
+          'Limpiar y centrifugar cogollos',
+          'Envasar con escabeche al 100% vacío',
+          'Macerar 1-2 meses en cámara'
+        ],
+        cookingTime: '5 minutos',
+        marinadeTime: '1-2 meses',
+        storage: 'Refrigerado al vacío',
+        tips: [
+          'La maceración larga es fundamental',
+          'El garum o la colatura aporta umami y salinidad',
+          'Centrifugar bien antes de envasar'
+        ]
+      },
+      {
+        name: 'Algas Escabechadas',
+        description: 'Algas en escabeche dulce de arroz',
+        type: 'vegetal',
+        yield: '500g de algas',
+        ingredients: [
+          { name: 'Lechuga de mar', amount: '500', unit: 'g' },
+          { name: 'Vinagre de arroz', amount: '200', unit: 'g' },
+          { name: 'Agua', amount: '50', unit: 'g' },
+          { name: 'Azúcar', amount: '25', unit: 'g' }
+        ],
+        preparation: [
+          'Llevar el vinagre, agua y azúcar a ebullición',
+          'Añadir las algas',
+          'Cocinar durante 1 minuto',
+          'Retirar del fuego y dejar enfriar',
+          'Reservar'
+        ],
+        cookingTime: '1 minuto',
+        marinadeTime: 'Enfriar',
+        storage: 'Refrigerado: 3-4 días',
+        tips: [
+          'Cocción muy breve para mantener textura',
+          'El vinagre de arroz es más suave',
+          'Perfecto acompañamiento para pescados'
+        ]
       }
-    ],
-    generalTips: [
-      'Las verduras deben estar tiernas pero firmes',
-      'No sobrecocinar para mantener textura',
-      'Escabeches vegetales son más ligeros en vinagre',
-      'Perfectos para preparar con antelación',
-      'Ideales para dietas vegetarianas',
-      'Combinar diferentes verduras en un mismo escabeche'
+    ]
+  },
+  'Otros Escabeches': {
+    name: 'Otros Escabeches',
+    description: 'Escabeches especiales y creativos',
+    recipes: [
+      {
+        name: 'Escabeche de Coco',
+        description: 'Escabeche exótico con crema y leche de coco',
+        type: 'otro',
+        yield: '100g',
+        ingredients: [
+          { name: 'Crema de coco', amount: '43.25', unit: 'g' },
+          { name: 'Leche de coco', amount: '86.51', unit: 'g' },
+          { name: 'Glicerina', amount: '4.33', unit: 'g' },
+          { name: 'Comino en grano', amount: '0.43', unit: 'g' },
+          { name: 'Pimienta negra', amount: '0.61', unit: 'g' },
+          { name: 'Laurel', amount: '0.26', unit: 'g' },
+          { name: 'Colatura de anchoa', amount: '8.65', unit: 'g' },
+          { name: 'Cebolla seca pelada', amount: '21.63', unit: 'g' },
+          { name: 'Aceite de coco', amount: '12.98', unit: 'g' },
+          { name: 'Ajo pelado', amount: '3.03', unit: 'g' },
+          { name: 'Vinagre de manzana', amount: '11.68', unit: 'g' }
+        ],
+        preparation: [
+          'Cortar la cebolla en juliana',
+          'Sofreír junto con el ajo en el aceite de coco',
+          'Añadir el resto de ingredientes',
+          'Llevar a ebullición y reducir',
+          'Enfriar y reservar en un biberón'
+        ],
+        cookingTime: '10-15 minutos',
+        marinadeTime: 'Enfriar',
+        storage: 'Refrigerado',
+        tips: [
+          'Receta de precisión con medidas exactas',
+          'El aceite de coco aporta textura única',
+          'La colatura aporta umami intenso'
+        ]
+      }
     ]
   }
-};
+}

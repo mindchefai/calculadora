@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Cuboid, Wind, Cloud, Grid, Flame, Thermometer, Droplet, Sun, PillBottle, X, Snail } from 'lucide-react';
+import { Cuboid, Wind, Cloud, Grid, Flame, Thermometer, Droplet, Sun, PillBottle, X, Snail , FlaskConical} from 'lucide-react';
 import SousVideModal from './SousVideModal';
 import GelificantesModal from './GelificantesModal';
 import AirearModal from './AirearModal';
@@ -24,8 +24,9 @@ const techniques = [
   { name: 'Nixtamalizar', icon: <Flame className="w-6 h-6 text-lime-600" /> },
   { name: 'Deshidratar', icon: <Sun className="w-6 h-6 text-orange-500" /> },
   { name: 'Cocinar a baja temperatura', icon: <Snail className="w-6 h-6 text-cyan-600" /> },
-    { name: 'Encurtir', icon: <PillBottle className="w-6 h-6 text-pink-600" /> },
-      { name: 'Escabechar', icon: <Thermometer className="w-6 h-6 text-yellow-700" /> }
+  { name: 'Encurtir', icon: <PillBottle className="w-6 h-6 text-pink-600" /> },
+  { name: 'Escabechar', icon: <Thermometer className="w-6 h-6 text-yellow-700" /> },
+  { name: 'Fermentar', icon: <FlaskConical className="w-6 h-6 text-black-700" /> }
 ];
 
 const Calculadora: React.FC<CalculadoraProps> = ({ onLogout }) => {

@@ -1,510 +1,360 @@
 // src/data/encurtir.ts
 
+export interface EncurtidoIngredient {
+  name: string;
+  amount: string;
+  unit: string;
+}
+
 export interface EncurtidoRecipe {
   name: string;
-  vegetables: string[];
-  brineType: string;
-  vinegar?: string;
-  salt: string;
-  sugar?: string;
-  spices: string[];
+  description: string;
+  yield: string;
+  ingredients: EncurtidoIngredient[];
   preparation: string[];
   time: string;
-  storage: string;
+  storage?: string;
   tips: string[];
-  uses: string[];
 }
 
 export interface EncurtidoCategory {
   name: string;
   description: string;
   recipes: EncurtidoRecipe[];
-  generalTips: string[];
 }
 
 export const encurtidos: Record<string, EncurtidoCategory> = {
-  'Encurtidos Rápidos': {
-    name: 'Encurtidos Rápidos (Quick Pickles)',
-    description: 'Encurtidos que se pueden consumir en pocas horas o días. Ideales para principiantes y consumo inmediato',
+  'Encurtidos de Verduras': {
+    name: 'Encurtidos de Verduras',
+    description: 'Encurtidos rápidos y tradicionales de vegetales',
     recipes: [
       {
-        name: 'Pepinillos Rápidos',
-        vegetables: ['Pepinos', 'Ajo', 'Eneldo fresco'],
-        brineType: 'Vinagre caliente',
-        vinegar: 'Vinagre blanco o de manzana',
-        salt: '30g por litro',
-        sugar: '50g por litro',
-        spices: ['Semillas de mostaza', 'Granos de pimienta', 'Hojas de laurel'],
+        name: 'Remolacha Encurtida',
+        description: 'Dados de remolacha',
+        yield: '100g de remolacha',
+        ingredients: [
+          { name: 'Remolacha roja en dados', amount: '100', unit: 'g' },
+          { name: 'Vinagre de arroz', amount: '50', unit: 'g' },
+          { name: 'Aceite de oliva virgen extra', amount: '50', unit: 'g' },
+          { name: 'Sal', amount: '5', unit: 'g' },
+          { name: 'Pimienta rosa en grano', amount: '5', unit: 'g' },
+          { name: 'Agua', amount: 'c.s.', unit: '' }
+        ],
         preparation: [
-          'Lavar y cortar pepinos en rodajas o lanzas',
-          'Colocar en frascos limpios con ajo y eneldo',
-          'Hervir vinagre, agua (50/50), sal y azúcar',
-          'Añadir especias a la salmuera',
-          'Verter salmuera caliente sobre los pepinos',
-          'Dejar enfriar y refrigerar',
-          'Esperar mínimo 2 horas antes de consumir'
+          'Cocer los dados de la remolacha durante 5 minutos',
+          'Mezclar el vinagre con el aceite, la sal y la pimienta rosa',
+          'Sumergir los dados de remolacha roja',
+          'Dejar encurtir ambos durante 12 horas en cámara hasta el momento del pase'
         ],
-        time: '2-24 horas',
-        storage: 'Refrigerado: 2-3 semanas',
+        time: '12 horas',
+        storage: 'Refrigerado',
         tips: [
-          'Los pepinos pequeños quedan más crujientes',
-          'No hervir los pepinos, solo la salmuera',
-          'Mejor sabor después de 24 horas'
-        ],
-        uses: ['Hamburguesas', 'Sándwiches', 'Ensaladas', 'Aperitivos', 'Acompañamiento']
+          'La pimienta rosa aporta un toque visual y aromático'
+        ]
       },
       {
-        name: 'Cebollas Encurtidas',
-        vegetables: ['Cebollas rojas', 'Ajo'],
-        brineType: 'Vinagre caliente',
-        vinegar: 'Vinagre de vino tinto o blanco',
-        salt: '20g por litro',
-        sugar: '30g por litro',
-        spices: ['Orégano', 'Comino', 'Chile seco'],
+        name: 'Remolacha Encurtida (al Vacío)',
+        description: 'Remolacha entera cocida y encurtida al vacío',
+        yield: '4 remolachas',
+        ingredients: [
+          { name: 'Remolachas peladas', amount: '4', unit: 'unidades' },
+          { name: 'Vinagre de arroz', amount: '50', unit: 'g' },
+          { name: 'Agua', amount: '75', unit: 'g' },
+          { name: 'Zanahoria laminada', amount: '25', unit: 'g' },
+          { name: 'Pimienta rosa en grano', amount: '10', unit: 'g' },
+          { name: 'Perejil', amount: '2', unit: 'g' },
+          { name: 'Rama de canela', amount: '1/2', unit: 'unidad' },
+          { name: 'Hoja de laurel', amount: '2', unit: 'unidades' },
+          { name: 'Sal', amount: 'c.s.', unit: '' },
+          { name: 'Azúcar', amount: 'c.s.', unit: '' }
+        ],
         preparation: [
-          'Cortar cebollas en rodajas finas',
-          'Colocar en frasco limpio',
-          'Hervir vinagre, agua (60/40), sal, azúcar y especias',
-          'Verter sobre las cebollas',
-          'Dejar enfriar y refrigerar',
-          'Listas en 1 hora, mejor a las 4 horas'
+          'Envasar las remolachas con el resto de ingredientes, previamente mezclados, al vacío',
+          'Cocer a 90°C durante 30 minutos',
+          'Enfriar',
+          'Dejar encurtir en cámara durante un mínimo de 3 meses hasta el momento de su utilización'
         ],
-        time: '1-4 horas',
-        storage: 'Refrigerado: 2-3 semanas',
+        time: '3 meses mínimo',
+        storage: 'Refrigerado al vacío',
         tips: [
-          'Las cebollas rojas mantienen mejor el color',
-          'Excelentes para tacos y hamburguesas',
-          'Se pueden añadir jalapeños'
-        ],
-        uses: ['Tacos', 'Hamburguesas', 'Ensaladas', 'Ceviches', 'Tostadas']
+          'La cocción al vacío mantiene textura y sabor',
+          'Requiere paciencia: el encurtido largo mejora el sabor',
+          'Ideal para preparar con antelación'
+        ]
       },
       {
-        name: 'Zanahorias y Rábanos',
-        vegetables: ['Zanahorias', 'Rábanos', 'Jengibre'],
-        brineType: 'Vinagre caliente',
-        vinegar: 'Vinagre de arroz',
-        salt: '25g por litro',
-        sugar: '40g por litro',
-        spices: ['Anís estrellado', 'Cilantro en grano'],
+        name: 'Setas Encurtidas',
+        description: 'Setas en encurtido rápido',
+        yield: '200g de setas',
+        ingredients: [
+          { name: 'Setas', amount: '200', unit: 'g' },
+          { name: 'Vinagre de manzana', amount: '100', unit: 'g' },
+          { name: 'Agua', amount: '30', unit: 'g' },
+          { name: 'Azúcar', amount: '10', unit: 'g' }
+        ],
         preparation: [
-          'Cortar verduras en bastones o rodajas finas',
-          'Blanquear 1 minuto en agua hirviendo (opcional)',
-          'Colocar en frasco con jengibre',
-          'Hervir vinagre, agua, sal, azúcar y especias',
-          'Verter sobre las verduras',
-          'Enfriar y refrigerar',
-          'Listas en 2-4 horas'
+          'Unir todos los ingredientes, excepto las setas, en un cazo',
+          'Llevar a ebullición',
+          'Una vez arranque el hervor, verter sobre las setas previamente dispuestas en una Gastronorm',
+          'Filmar a piel',
+          'Dejar cocinar a temperatura ambiente hasta que la mezcla se enfríe',
+          'Reservar para el tartar de setas'
         ],
-        time: '2-4 horas',
-        storage: 'Refrigerado: 2 semanas',
+        time: '2-3 horas',
+        storage: 'Refrigerado: 3-4 días',
         tips: [
-          'Cortar en bastones uniformes',
-          'Blanquear mantiene color vibrante',
-          'Ideales para banh mi'
-        ],
-        uses: ['Banh mi', 'Bowls', 'Ensaladas', 'Guarnición asiática']
+          'Las setas absorben bien el encurtido',
+          'Perfecto para tartar o guarnición',
+          'El azúcar equilibra la acidez'
+        ]
       },
       {
-        name: 'Jalapeños Encurtidos',
-        vegetables: ['Jalapeños', 'Ajo', 'Cebolla'],
-        brineType: 'Vinagre caliente',
-        vinegar: 'Vinagre blanco',
-        salt: '30g por litro',
-        sugar: '20g por litro (opcional)',
-        spices: ['Orégano', 'Comino', 'Hojas de laurel'],
+        name: 'Rábanos Encurtidos',
+        description: 'Círculos de rábano con salmuera asiática',
+        yield: 'Variable',
+        ingredients: [
+          { name: 'Círculos de rábano', amount: 'c.s.', unit: '' },
+          { name: 'Agua', amount: '500', unit: 'g' },
+          { name: 'Vinagre de arroz', amount: '250', unit: 'g' },
+          { name: 'Aceite de sésamo', amount: '100', unit: 'g' },
+          { name: 'Chile picante', amount: '1', unit: 'unidad' },
+          { name: 'Pimiento verde troceado', amount: '1', unit: 'unidad' },
+          { name: 'Pimienta negra en grano', amount: '15', unit: 'g' },
+          { name: 'Albahaca roja', amount: '15', unit: 'g' },
+          { name: 'Sal', amount: '20', unit: 'g' },
+          { name: 'Azúcar de caña', amount: '6', unit: 'g' },
+          { name: 'Tallo de lemon grass', amount: '1', unit: 'unidad' },
+          { name: 'Galanga fresca', amount: '10', unit: 'g' }
+        ],
         preparation: [
-          'Cortar jalapeños en rodajas',
-          'Cortar ajo y cebolla',
-          'Colocar todo en frasco',
-          'Hervir vinagre, agua (70/30), sal, azúcar y especias',
-          'Verter sobre los jalapeños',
-          'Dejar enfriar completamente',
-          'Refrigerar mínimo 1 hora'
+          'Elaborar una salmuera con todos los ingredientes excepto el rábano',
+          'Introducir en bolsas de vacío los círculos de rábano y la salmuera',
+          'Usar 40 círculos y 50g de salmuera por bolsa',
+          'Reservar durante 3 horas'
         ],
-        time: '1-2 horas',
-        storage: 'Refrigerado: 1 mes',
+        time: '3 horas',
+        storage: 'Refrigerado al vacío',
         tips: [
-          'Usar guantes al cortar',
-          'Quitar semillas para menos picante',
-          'La salmuera se puede reutilizar una vez'
-        ],
-        uses: ['Nachos', 'Tacos', 'Pizza', 'Hamburguesas', 'Quesadillas']
+          'Sabores asiáticos intensos',
+          'El lemon grass y la galanga son esenciales',
+          'Perfecto para platos orientales'
+        ]
       }
-    ],
-    generalTips: [
-      'Siempre usar frascos limpios y esterilizados',
-      'Salmuera caliente acelera el proceso',
-      'Consumir dentro de 2-3 semanas refrigerado',
-      'No son aptos para conserva a largo plazo sin refrigeración',
-      'Probar la salmuera antes de verter (debe estar bien sazonada)',
-      'Dejar enfriar completamente antes de tapar'
     ]
   },
-  'Fermentados (Lacto-fermentación)': {
-    name: 'Fermentados (Lacto-fermentación)',
-    description: 'Encurtidos tradicionales fermentados con sal, sin vinagre. Desarrollan probióticos beneficiosos',
+  'Encurtidos Genéricos': {
+    name: 'Encurtidos Genéricos',
+    description: 'Encurtidos para ingredientes y aplicaciones concretas',
     recipes: [
       {
-        name: 'Chucrut (Sauerkraut)',
-        vegetables: ['Col blanca o morada'],
-        brineType: 'Salmuera natural (solo sal)',
-        salt: '20-30g por kilo de col',
-        spices: ['Semillas de alcaravea', 'Bayas de enebro (opcional)'],
+        name: 'Encurtido para flores y vegetales delicados',
+        description: 'Encurtido suave para flores y vegetales delicados',
+        yield: '150g de producto',
+        ingredients: [
+          { name: 'Ingrediente a encurtir (ej: hinojo Marino, Flor de Calabacín)', amount: '150', unit: 'g' },
+          { name: 'Vinagre de arroz', amount: '40', unit: 'g' },
+          { name: 'Vinagre balsámico blanco', amount: '60', unit: 'g' },
+          { name: 'Agua', amount: '20', unit: 'g' },
+          { name: 'Sal', amount: 'c.s.', unit: '' }
+        ],
         preparation: [
-          'Cortar col en tiras finas',
-          'Pesar la col y calcular 2-3% de sal',
-          'Mezclar col con sal en un bowl grande',
-          'Masajear durante 5-10 minutos hasta que suelte líquido',
-          'Transferir a frasco limpio, presionando firmemente',
-          'El líquido debe cubrir completamente la col',
-          'Dejar 5cm de espacio en la parte superior',
-          'Tapar dejando escapar gases (válvula o tapón suelto)',
-          'Fermentar a temperatura ambiente (18-22°C) 3-10 días',
-          'Probar diariamente hasta lograr acidez deseada',
-          'Refrigerar cuando esté listo'
+          'Mezclar los líquidos con la sal hasta homogenizar',
+          'Envasar con el ingrediente a encurtir al vacío',
+          'Dejar encurtir en cámara durante un mínimo de 2 meses'
         ],
-        time: '3-10 días de fermentación',
-        storage: 'Refrigerado: varios meses',
+        time: '2 meses mínimo',
+        storage: 'Refrigerado al vacío',
         tips: [
-          'La col debe estar completamente sumergida',
-          'Usar peso de fermentación si es necesario',
-          'Burbujas y espuma son normales',
-          'Olor fuerte es parte del proceso',
-          'Desechar si aparece moho en superficie'
-        ],
-        uses: ['Hot dogs', 'Reuben sandwich', 'Guarnición', 'Ensaladas', 'Probiótico natural']
+          'Para ingredientes delicados',
+          'La larga maceración es clave',
+          'Ideal para flores comestibles'
+        ]
       },
       {
-        name: 'Pepinillos Fermentados (Pickles clásicos)',
-        vegetables: ['Pepinos pequeños', 'Ajo', 'Eneldo', 'Hojas de vid o roble'],
-        brineType: 'Salmuera de sal',
-        salt: '50-60g por litro de agua',
-        spices: ['Granos de pimienta', 'Semillas de mostaza', 'Chile seco', 'Hojas de laurel'],
+        name: 'Encurtidos al vacío',
+        description: 'Encurtido cocido al vacío',
+        yield: '4 porciones',
+        ingredients: [
+          { name: 'Ingredientes a encurtir (ej: cebolla, cebolleta, colinabo)', amount: '4', unit: 'porciones' },
+          { name: 'Vinagre de arroz', amount: '75', unit: 'g' },
+          { name: 'Agua', amount: '75', unit: 'g' },
+          { name: 'Pimienta rosa en grano', amount: '10', unit: 'g' },
+          { name: 'Perejil', amount: '2', unit: 'g' },
+          { name: 'Rama de canela', amount: '2', unit: 'unidades' },
+          { name: 'Hoja de laurel', amount: '12', unit: 'unidades' },
+          { name: 'Sal', amount: 'c.s.', unit: '' },
+          { name: 'Azúcar', amount: 'c.s.', unit: '' }
+        ],
         preparation: [
-          'Lavar pepinos y quitar extremo de la flor',
-          'Colocar hojas de vid en fondo del frasco (mantiene crujiente)',
-          'Añadir pepinos, ajo, eneldo y especias',
-          'Disolver sal en agua fría para hacer salmuera',
-          'Verter salmuera hasta cubrir pepinos completamente',
-          'Usar peso para mantener sumergidos',
-          'Tapar con tapa de fermentación o gasa',
-          'Fermentar 3-7 días a temperatura ambiente',
-          'Probar diariamente',
-          'Refrigerar cuando alcance el punto deseado'
+          'Envasar los ingredientes a encurtir con el resto de elementos, previamente mezclados, al vacío',
+          'Cocer a 90°C durante 30 minutos',
+          'Enfriar',
+          'Dejar encurtir en cámara durante un mínimo de 3 meses'
         ],
-        time: '3-7 días de fermentación',
-        storage: 'Refrigerado: 6 meses o más',
+        time: '3 meses mínimo',
+        storage: 'Refrigerado al vacío',
         tips: [
-          'Las hojas de vid/roble contienen taninos que mantienen textura crujiente',
-          'Quitar el extremo de la flor previene ablandamiento',
-          'Temperatura ideal: 18-22°C',
-          'Cuanto más tiempo, más ácido'
-        ],
-        uses: ['Snack', 'Sándwiches', 'Hamburguesas', 'Ensaladas', 'Tabla de quesos']
+          'Cocción al vacío conserva estructura',
+          'Las especias aportan complejidad',
+          'Paciencia recompensada con el tiempo'
+        ]
       },
       {
-        name: 'Kimchi Básico',
-        vegetables: ['Col napa', 'Rábano daikon', 'Cebolletas', 'Ajo', 'Jengibre'],
-        brineType: 'Salmuera + pasta de chile',
-        salt: '30g por litro para salmuera inicial + pasta',
-        spices: ['Gochugaru (chile coreano)', 'Salsa de pescado (opcional)'],
+        name: 'Encurtidos para pimientos',
+        description: 'Encurtido para pimientos',
+        yield: '50g de producto',
+        ingredients: [
+          { name: 'Ingrediente a encurtir (ej: pimiento de Padrón)', amount: '50', unit: 'g' },
+          { name: 'Vinagre balsámico blanco', amount: '100', unit: 'g' },
+          { name: 'Vinagre de manzana', amount: '30', unit: 'g' },
+          { name: 'Sal', amount: '10', unit: 'g' },
+          { name: 'Agua', amount: '30', unit: 'g' }
+        ],
         preparation: [
-          'Cortar col napa en cuartos y luego en trozos',
-          'Sumergir en salmuera (30g/L) durante 2-4 horas',
-          'Enjuagar y escurrir bien',
-          'Hacer pasta: mezclar gochugaru, ajo, jengibre, salsa de pescado',
-          'Cortar rábano y cebolletas',
-          'Mezclar todas las verduras con la pasta',
-          'Empacar firmemente en frasco limpio',
-          'Presionar para eliminar bolsas de aire',
-          'Dejar espacio superior, el líquido subirá',
-          'Fermentar 1-5 días a temperatura ambiente',
-          'Presionar diariamente para liberar gases',
-          'Refrigerar cuando esté al gusto'
+          'Mezclar ambos vinagres',
+          'Incorporar la sal y remover hasta disolverla',
+          'Agregar el agua',
+          'Envasar al vacío con el ingrediente a encurtir',
+          'Dejar encurtir en cámara durante un mínimo de 2 semanas'
         ],
-        time: '1-5 días de fermentación',
-        storage: 'Refrigerado: varios meses, mejora con el tiempo',
+        time: '2 semanas mínimo',
+        storage: 'Refrigerado al vacío',
         tips: [
-          'Usar guantes al mezclar la pasta',
-          'El gochugaru es esencial para sabor auténtico',
-          'Se puede hacer versión vegetariana sin salsa de pescado',
-          'Mejora después de 2 semanas en nevera'
-        ],
-        uses: ['Acompañamiento coreano', 'Arroz frito', 'Ramen', 'Tacos', 'Probiótico']
+          'Equilibrio perfecto para pimientos',
+          'El balsámico blanco aporta suavidad',
+          'Dos semanas mínimo para mejor resultado'
+        ]
       },
       {
-        name: 'Zanahorias Fermentadas',
-        vegetables: ['Zanahorias', 'Ajo', 'Jengibre'],
-        brineType: 'Salmuera de sal',
-        salt: '30g por litro de agua',
-        spices: ['Cúrcuma', 'Comino', 'Cilantro en grano'],
+        name: 'Encurtido para vegetales',
+        description: 'Encurtido dulce para vegetales',
+        yield: '50g de producto',
+        ingredients: [
+          { name: 'Ingrediente a encurtir (ej: pepinillo, zanahoria)', amount: '50', unit: 'g' },
+          { name: 'Vinagre de arroz', amount: '100', unit: 'g' },
+          { name: 'Vinagre balsámico blanco', amount: '50', unit: 'g' },
+          { name: 'Sal', amount: '15', unit: 'g' },
+          { name: 'Azúcar', amount: '15', unit: 'g' }
+        ],
         preparation: [
-          'Pelar y cortar zanahorias en bastones',
-          'Colocar en frasco con ajo y jengibre',
-          'Disolver sal en agua para hacer salmuera',
-          'Añadir especias a la salmuera',
-          'Verter sobre zanahorias hasta cubrirlas',
-          'Usar peso para mantener sumergidas',
-          'Tapar con válvula de fermentación',
-          'Fermentar 5-7 días a temperatura ambiente',
-          'Probar y refrigerar cuando estén listas'
+          'Mezclar ambos vinagres',
+          'Incorporar la sal y el azúcar',
+          'Remover hasta homogeneizar',
+          'Envasar con el ingrediente a encurtir al vacío',
+          'Dejar encurtir en cámara durante un mínimo de 2 semanas'
         ],
-        time: '5-7 días de fermentación',
-        storage: 'Refrigerado: 3-4 meses',
+        time: '2 semanas mínimo',
+        storage: 'Refrigerado al vacío',
         tips: [
-          'Bastones gruesos mantienen mejor la textura',
-          'La cúrcuma aporta color y propiedades',
-          'Excelente aperitivo probiótico'
-        ],
-        uses: ['Snack saludable', 'Ensaladas', 'Bowl', 'Guarnición', 'Probiótico']
+          'Balance dulce-ácido perfecto',
+          'Ideal para pepinillos y zanahorias',
+          'También funciona con flores comestibles'
+        ]
       }
-    ],
-    generalTips: [
-      'NUNCA usar sal yodada, inhibe la fermentación',
-      'Usar sal marina sin aditivos',
-      'Mantener verduras siempre sumergidas en salmuera',
-      'Temperatura ideal: 18-22°C',
-      'Burbujas, espuma y olor fuerte son normales',
-      'Moho blanco en superficie: quitar y continuar. Moho de colores: desechar todo',
-      'Presionar diariamente para liberar gases',
-      'Probar frecuentemente para encontrar tu punto preferido',
-      'Una vez refrigerados, la fermentación se ralentiza mucho',
-      'Los fermentados mejoran con el tiempo en nevera'
     ]
   },
-  'Encurtidos en Conserva': {
-    name: 'Encurtidos en Conserva (Larga duración)',
-    description: 'Encurtidos procesados al baño maría para conservación prolongada sin refrigeración',
+  'Otros Encurtidos': {
+    name: 'Otros Encurtidos',
+    description: 'Encurtidos únicos y preparaciones especiales',
     recipes: [
       {
-        name: 'Pepinillos en Conserva',
-        vegetables: ['Pepinos', 'Cebolla', 'Ajo', 'Eneldo'],
-        brineType: 'Vinagre procesado',
-        vinegar: 'Vinagre blanco (5% acidez)',
-        salt: '50g por litro',
-        sugar: '100g por litro',
-        spices: ['Semillas de mostaza', 'Cúrcuma', 'Granos de pimienta', 'Hojas de laurel'],
+        name: 'Cereza Encurtida',
+        description: 'Cerezas deshuesadas en vinagre de sidra',
+        yield: '30 unidades',
+        ingredients: [
+          { name: 'Cerezas', amount: '30', unit: 'unidades' },
+          { name: 'Vinagre de sidra', amount: 'c.s.', unit: '' }
+        ],
         preparation: [
-          'Esterilizar frascos en agua hirviendo 10 minutos',
-          'Cortar pepinos en rodajas o lanzas',
-          'Empacar pepinos, cebolla, ajo y eneldo en frascos calientes',
-          'Hervir vinagre, agua (50/50), sal, azúcar y especias',
-          'Verter salmuera caliente dejando 1cm de espacio superior',
-          'Limpiar bordes del frasco',
-          'Colocar tapas nuevas y cerrar',
-          'Procesar al baño maría: 10 min frascos pequeños, 15 min grandes',
-          'Dejar enfriar completamente',
-          'Verificar sellado (tapa cóncava)',
-          'Etiquetar con fecha',
-          'Esperar 6 semanas antes de abrir para mejor sabor'
+          'Deshuesar las cerezas',
+          'Introducir en un bol',
+          'Cubrir con el vinagre de sidra',
+          'Dejar encurtir en cámara durante 2 horas',
+          'Reservar hasta el momento del pase',
+          'Atemperar antes de servir',
+          'Hacer por servicio'
         ],
-        time: 'Procesamiento: 1-2 horas. Curado: 6 semanas',
-        storage: 'Sellado: 1 año. Abierto refrigerado: 1 mes',
+        time: '2 horas',
+        storage: 'Hacer por servicio',
         tips: [
-          'Solo usar vinagre de 5% acidez o más',
-          'Tapas deben ser nuevas para cada conserva',
-          'Si la tapa no selló, refrigerar y consumir pronto',
-          'Desechar si hay olor extraño, moho o tapa abombada'
-        ],
-        uses: ['Larga conservación', 'Despensa', 'Regalos', 'Uso durante todo el año']
+          'Encurtido rápido',
+          'Atemperar antes de servir para mejor sabor',
+          'Ideal para postres o platos agridulces'
+        ]
       },
       {
-        name: 'Chutney de Mango',
-        vegetables: ['Mangos verdes o semi-maduros', 'Cebolla', 'Jengibre', 'Pasas'],
-        brineType: 'Vinagre cocido con azúcar',
-        vinegar: 'Vinagre de manzana',
-        salt: '20g por kilo de fruta',
-        sugar: '400-500g por kilo de fruta',
-        spices: ['Canela', 'Clavo', 'Comino', 'Mostaza en grano', 'Chile seco'],
+        name: 'Algas Encurtidas',
+        description: 'Alga roja en vinagre con almíbar',
+        yield: '200g de algas',
+        ingredients: [
+          { name: 'Alga roja', amount: '200', unit: 'g' },
+          { name: 'Vinagre Chardonnay', amount: '100', unit: 'g' },
+          { name: 'Almíbar TPT', amount: '30', unit: 'g' },
+          { name: 'Sal', amount: '5', unit: 'g' }
+        ],
         preparation: [
-          'Pelar y cortar mangos en cubos',
-          'Picar cebolla, jengibre finamente',
-          'Tostar especias ligeramente',
-          'Combinar todo en olla grande',
-          'Añadir vinagre, azúcar, sal',
-          'Cocinar a fuego lento 45-60 minutos, removiendo',
-          'La mezcla debe espesar considerablemente',
-          'Verter en frascos esterilizados calientes',
-          'Llenar dejando 1cm de espacio',
-          'Procesar al baño maría 15 minutos',
-          'Enfriar y verificar sellado'
+          'Mezclar todos los ingredientes en frío',
+          'Dejar marinar en cámara durante 24 horas',
+          'Reservar en cámara hasta el momento del pase'
         ],
-        time: 'Procesamiento: 2-3 horas. Maduración: 2-4 semanas',
-        storage: 'Sellado: 1 año. Abierto refrigerado: 2 meses',
+        time: '24 horas',
+        storage: 'Refrigerado',
         tips: [
-          'Debe quedar espeso, no líquido',
-          'Mejora el sabor después de 1 mes',
-          'Excelente regalo gourmet'
-        ],
-        uses: ['Carnes', 'Curry', 'Quesos', 'Sándwiches', 'Samosas']
+          'Preparación en frío',
+          'El almíbar equilibra la acidez',
+          'Textura única de las algas'
+        ]
       },
       {
-        name: 'Pimientos Rojos Asados en Conserva',
-        vegetables: ['Pimientos rojos', 'Ajo'],
-        brineType: 'Vinagre o aceite + vinagre',
-        vinegar: 'Vinagre de vino',
-        salt: '30g por litro',
-        spices: ['Orégano', 'Albahaca'],
+        name: 'Mostaza Encurtida',
+        description: 'Granos de mostaza cocidos en vinagre',
+        yield: '150g de mostaza',
+        ingredients: [
+          { name: 'Mostaza en grano', amount: '150', unit: 'g' },
+          { name: 'Vinagre de manzana', amount: '350', unit: 'g' },
+          { name: 'Agua', amount: '350', unit: 'g' },
+          { name: 'Azúcar', amount: '120', unit: 'g' }
+        ],
         preparation: [
-          'Asar pimientos hasta que la piel se ennegrezca',
-          'Colocar en bolsa cerrada 10 minutos para sudar',
-          'Pelar y quitar semillas',
-          'Cortar en tiras',
-          'Colocar en frascos esterilizados con ajo',
-          'Opción 1: Cubrir con salmuera de vinagre hirviendo',
-          'Opción 2: Cubrir con aceite de oliva + poco vinagre',
-          'Dejar 1cm de espacio superior',
-          'Procesar al baño maría 15 minutos',
-          'Enfriar y verificar sellado'
+          'Mezclar todos los ingredientes',
+          'Llevar a ebullición',
+          'Una vez arranque el hervor, cocer hasta enternecer la mostaza y evaporar los líquidos',
+          'Reservar hasta el momento del pase'
         ],
-        time: 'Procesamiento: 2 horas',
-        storage: 'Sellado: 1 año. Abierto refrigerado: 2 semanas',
-        tips: [
-          'Si se usa aceite, agregar al menos 10% vinagre por seguridad',
-          'Asegurarse de no dejar bolsas de aire',
-          'El aceite solidifica en frío (normal)'
-        ],
-        uses: ['Antipasto', 'Pizza', 'Pasta', 'Sándwiches', 'Ensaladas']
-      }
-    ],
-    generalTips: [
-      'IMPORTANTE: Seguir estrictamente recetas probadas para seguridad',
-      'Usar solo vinagre de al menos 5% acidez',
-      'Esterilizar siempre frascos y tapas',
-      'Tapas deben ser nuevas para cada procesamiento',
-      'Procesar el tiempo completo indicado',
-      'Verificar sellado: la tapa debe estar cóncava y no moverse al presionar',
-      'Si no selló correctamente: refrigerar y consumir pronto',
-      'DESECHAR si: tapa abombada, olor extraño, líquido turbio, moho',
-      'Etiquetar con contenido y fecha',
-      'Conservas duran 1 año en lugar fresco y oscuro',
-      'Una vez abierto, refrigerar y consumir en 1-2 semanas'
-    ]
-  },
-  'Encurtidos Exóticos': {
-    name: 'Encurtidos Exóticos e Internacionales',
-    description: 'Recetas especiales de diferentes culturas gastronómicas',
-    recipes: [
-      {
-        name: 'Gari (Jengibre Encurtido Japonés)',
-        vegetables: ['Jengibre joven'],
-        brineType: 'Vinagre de arroz dulce',
-        vinegar: 'Vinagre de arroz',
-        salt: '20g por 250g de jengibre',
-        sugar: '100g por 250ml de vinagre',
-        spices: [],
-        preparation: [
-          'Pelar jengibre joven con cuchara',
-          'Cortar en láminas muy finas (mandolina)',
-          'Espolvorear con sal, dejar reposar 30 minutos',
-          'Enjuagar y exprimir suavemente',
-          'Blanquear en agua hirviendo 30 segundos',
-          'Escurrir y colocar en frasco',
-          'Calentar vinagre con azúcar hasta disolver',
-          'Verter sobre el jengibre',
-          'Enfriar y refrigerar',
-          'Listo en 3-4 horas, mejor después de 1 día'
-        ],
-        time: '4 horas - 1 día',
-        storage: 'Refrigerado: 2-3 meses',
-        tips: [
-          'El jengibre joven es menos fibroso',
-          'Tomará color rosado natural con el tiempo',
-          'Esencial en sushi'
-        ],
-        uses: ['Sushi', 'Sashimi', 'Limpia paladar', 'Guarnición japonesa']
-      },
-      {
-        name: 'Tsukemono (Encurtido Japonés de Nabo)',
-        vegetables: ['Nabo daikon', 'Alga kombu'],
-        brineType: 'Sal y prensado',
-        salt: '30g por kilo de nabo',
-        sugar: '20g por kilo',
-        spices: ['Yuzu o limón', 'Chile japonés'],
-        preparation: [
-          'Cortar daikon en medias lunas gruesas',
-          'Colocar en recipiente con tapa pesada',
-          'Espolvorear con sal y azúcar',
-          'Añadir alga kombu y ralladura de yuzu',
-          'Colocar peso encima (2-3 kg)',
-          'Dejar a temperatura ambiente 1-2 días',
-          'Refrigerar',
-          'Enjuagar antes de servir'
-        ],
-        time: '1-2 días',
+        time: '30-40 minutos',
         storage: 'Refrigerado: 1 semana',
         tips: [
-          'El peso hace que suelte su propio líquido',
-          'Típico desayuno japonés',
-          'Crujiente y refrescante'
-        ],
-        uses: ['Desayuno japonés', 'Acompañamiento', 'Arroz', 'Bento']
+          'La cocción debe reducir bien el líquido',
+          'Textura final: granos tiernos',
+          'Excelente condimento para carnes'
+        ]
       },
       {
-        name: 'Encurtido Mexicano (Escabeche)',
-        vegetables: ['Zanahorias', 'Cebollas', 'Jalapeños', 'Coliflor', 'Ajo'],
-        brineType: 'Vinagre con especias mexicanas',
-        vinegar: 'Vinagre blanco',
-        salt: '30g por litro',
-        sugar: '50g por litro',
-        spices: ['Orégano mexicano', 'Comino', 'Hojas de laurel', 'Pimienta gorda'],
+        name: 'Yema Encurtida',
+        description: 'Yemas curadas en sal',
+        yield: '6 yemas',
+        ingredients: [
+          { name: 'Yemas de huevo', amount: '6', unit: 'unidades' },
+          { name: 'Sal', amount: '250', unit: 'g' }
+        ],
         preparation: [
-          'Cortar todas las verduras en trozos medianos',
-          'Blanquear zanahorias y coliflor 2 minutos',
-          'Colocar todas las verduras en frasco',
-          'Hervir vinagre, agua (60/40), sal, azúcar y especias',
-          'Verter sobre las verduras',
-          'Dejar enfriar',
-          'Refrigerar mínimo 4 horas',
-          'Mejor después de 24 horas'
+          'Colocar la mitad de la sal en la base de un bol',
+          'Sacar cuidadosamente las yemas y colocar sobre la sal',
+          'Cubrir las yemas con la sal restante',
+          'Dejar que la sal actúe durante 4 horas',
+          'Lavar las yemas con un hilo de agua fresca para evitar que se rompan',
+          'Secar',
+          'Batir con unas varillas para obtener una pasta muy sedosa'
         ],
-        time: '4-24 horas',
-        storage: 'Refrigerado: 1 mes',
+        time: '4 horas',
+        storage: 'Refrigerado: 2-3 días',
         tips: [
-          'Mezcla colorida y versátil',
-          'Ajustar picante según preferencia',
-          'Se puede procesar al baño maría para conserva'
-        ],
-        uses: ['Tacos', 'Tortas', 'Tostadas', 'Quesadillas', 'Guarnición mexicana']
-      },
-      {
-        name: 'Atchara (Papaya Verde Filipina)',
-        vegetables: ['Papaya verde', 'Zanahoria', 'Pimiento', 'Cebolla', 'Pasas'],
-        brineType: 'Vinagre dulce',
-        vinegar: 'Vinagre blanco o de caña',
-        salt: '20g por litro',
-        sugar: '200g por litro',
-        spices: ['Jengibre', 'Ajo'],
-        preparation: [
-          'Rallar papaya verde en tiras',
-          'Salar y dejar reposar 1 hora',
-          'Enjuagar y exprimir',
-          'Cortar zanahoria y pimiento en juliana',
-          'Picar cebolla y jengibre',
-          'Mezclar todas las verduras',
-          'Hervir vinagre con azúcar, jengibre y ajo',
-          'Verter sobre las verduras',
-          'Añadir pasas',
-          'Enfriar y refrigerar',
-          'Listo en 1 día'
-        ],
-        time: '1 día',
-        storage: 'Refrigerado: 2 semanas',
-        tips: [
-          'Debe quedar crujiente y dulce-ácido',
-          'Acompaña carnes fritas filipinas',
-          'Colorido y tropical'
-        ],
-        uses: ['Acompañamiento filipino', 'Carnes fritas', 'Arroz', 'BBQ']
+          'Manipular con extremo cuidado',
+          'El curado con sal concentra sabores',
+          'Textura sedosa única',
+          'Usar como condimento gourmet'
+        ]
       }
-    ],
-    generalTips: [
-      'Respetar las proporciones y técnicas tradicionales',
-      'Investigar ingredientes auténticos cuando sea posible',
-      'Cada cultura tiene su equilibrio único de sabores',
-      'Excelentes para explorar otras gastronomías',
-      'Pueden adaptarse pero mantener esencia original',
-      'Ideales para acompañar platos de su región de origen'
     ]
   }
 };
