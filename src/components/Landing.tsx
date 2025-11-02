@@ -218,19 +218,19 @@ const handleSubmit = async () => {
     const tableName = import.meta.env.VITE_AIRTABLE_TABLE_NAME || 'Leads';
 
     // 👇 NUEVO: Mapeo manual de respuestas a campos de Airtable
-    const airtableData = {
-      'Nombre completo': answers[10] as string, // Pregunta 10
-      'Email': answers[11] as string, // Pregunta 11
-      'Rol': answers[1] as string, // Pregunta 1
-      'Aspectos gestion': Array.isArray(answers[2]) ? answers[2].join(', ') : '', // Pregunta 2
-      'Time consuming': Array.isArray(answers[3]) ? answers[3].join(', ') : '', // Pregunta 3
-      'Horas semanales': answers[4] as string, // Pregunta 4
-      'Frecuencia revision': answers[5] as string, // Pregunta 5
-      'Margen controlado': answers[6] as string, // Pregunta 6
-      'Ubicacion recetas': Array.isArray(answers[7]) ? answers[7].join(', ') : '', // Pregunta 7
-      'Tareas complicadas': Array.isArray(answers[8]) ? answers[8].join(', ') : '', // Pregunta 8
-      'Ticket medio': answers[9] as string, // Pregunta 9
-    };
+const airtableData = {
+  "Nombre completo": answers[10] as string,
+  "Email": answers[11] as string,
+  "Rol": answers[1] as string,
+  "Aspectos gestion": Array.isArray(answers[2]) ? answers[2].join(', ') : '',
+  "Time consuming": Array.isArray(answers[3]) ? answers[3].join(', ') : '',
+  "Horas semanales": answers[4] as string,
+  "Frecuencia revision": answers[5] as string,
+  "Margen controlado": answers[6] as string,
+  "Ubicacion recetas": Array.isArray(answers[7]) ? answers[7].join(', ') : '',
+  "Tareas complicadas": Array.isArray(answers[8]) ? answers[8].join(', ') : '',
+  "Ticket medio": answers[9] as string,
+};
 
     if (apiKey && baseId && tableName) {
       const response = await fetch(`https://api.airtable.com/v0/${baseId}/${tableName}`, {
