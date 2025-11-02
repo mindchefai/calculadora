@@ -212,49 +212,45 @@ const handleSubmit = async () => {
     const email = answers[11] as string;
     setUserEmail(email);
 
-    // Guardar en Airtable
-    const apiKey = import.meta.env.VITE_AIRTABLE_API_KEY;
-    const baseId = import.meta.env.VITE_AIRTABLE_BASE_ID;
-    const tableName = import.meta.env.VITE_AIRTABLE_TABLE_NAME || 'Leads';
+    const webhookURL = 'https://hook.eu2.make.com/fiuleawp6xk3qcavynmepytctywbmdyg';
+    
+    const leadData = {
+      "Nombre completo": answers[10] as string,
+      "Email": answers[11] as string,
+      "Rol": answers[1] as string,
+      "Aspectos gestion": Array.isArray(answers[2]) ? answers[2].join(', ') : '',
+      "Time consuming": Array.isArray(answers[3]) ? answers[3].join(', ') : '',
+      "Horas semanales": answers[4] as string,
+      "Frecuencia revision": answers[5] as string,
+      "Margen controlado": answers[6] as string,
+      "Ubicacion recetas": Array.isArray(answers[7]) ? answers[7].join(', ') : '',
+      "Tareas complicadas": Array.isArray(answers[8]) ? answers[8].join(', ') : '',
+      "Ticket medio": answers[9] as string,
+    };
 
-    // 👇 NUEVO: Mapeo manual de respuestas a campos de Airtable
-const airtableData = {
-  "Nombre completo": answers[10] as string,
-  "Email": answers[11] as string,
-  "Rol": answers[1] as string,
-  "Aspectos gestion": Array.isArray(answers[2]) ? answers[2].join(', ') : '',
-  "Time consuming": Array.isArray(answers[3]) ? answers[3].join(', ') : '',
-  "Horas semanales": answers[4] as string,
-  "Frecuencia revision": answers[5] as string,
-  "Margen controlado": answers[6] as string,
-  "Ubicacion recetas": Array.isArray(answers[7]) ? answers[7].join(', ') : '',
-  "Tareas complicadas": Array.isArray(answers[8]) ? answers[8].join(', ') : '',
-  "Ticket medio": answers[9] as string,
-};
+    // 🔍 DEBUG: Ver qué enviamos
+    console.log('📤 URL:', webhookURL);
+    console.log('📦 Datos:', leadData);
 
-    if (apiKey && baseId && tableName) {
-      const response = await fetch(`https://api.airtable.com/v0/${baseId}/${tableName}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          fields: airtableData
-        })
-      });
+    const response = await fetch(webhookURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(leadData)
+    });
 
-      // 👇 NUEVO: Verificar si hubo error
-// 👇 NUEVO: Verificar si hubo error
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error completo de Airtable:', JSON.stringify(errorData, null, 2));
-        console.error('Datos enviados:', JSON.stringify(airtableData, null, 2));
-        throw new Error(`Error al guardar en Airtable: ${errorData.error?.message || 'Error desconocido'}`);
-      }
+    // 🔍 DEBUG: Ver la respuesta
+    console.log('📥 Status:', response.status);
+    console.log('📥 OK?:', response.ok);
+    const responseText = await response.text();
+    console.log('📥 Respuesta completa:', responseText);
+
+    if (!response.ok) {
+      throw new Error('Error al guardar los datos');
     }
 
-    // Enviar email con código
+    // Enviar email con código de acceso
     const emailSent = await sendAccessCodeEmail(nombre, email);
     
     if (!emailSent) {
