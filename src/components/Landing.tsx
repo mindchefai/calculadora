@@ -131,7 +131,7 @@ const Landing = () => {
       const email = answers[11] as string;
       setUserEmail(email);
 
-      const webhookURL = 'https://hook.eu2.make.com/fiuleawp6xk3qcavynmepytctywbmdyg';
+      const webhookURL = 'https://hook.eu2.make.com/5j28vyiv2xwkfx4c66l3xpv73gs9gbu8';
       
       const leadData = {
         "Nombre completo": answers[10] as string,
